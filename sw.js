@@ -1,4 +1,4 @@
-const CACHE = "betreuung-v1";
+const CACHE = "betreuung-v2";
 
 self.addEventListener("install", event => {
 
