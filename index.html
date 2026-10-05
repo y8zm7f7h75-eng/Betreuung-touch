@@ -563,7 +563,10 @@ function showTab(tab){
 
   document.getElementById(tab).style.display="block";
   document.getElementById("tab-"+tab).classList.add("active");
-  if(tab==="wochenuebersicht")renderWeeklyOverview();
+  if(tab==="wochenuebersicht"){
+  document.getElementById("wochenuebersicht").style.display="block";
+  renderWeeklyOverview();
+}
   if(tab==="heute") renderToday();
   if(tab==="alle") renderAll();
   if(tab==="woche") renderDailyPlan();
