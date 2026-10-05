@@ -1006,7 +1006,7 @@ function renderWeeklyOverview(){
 
   const picker=document.getElementById("weekPicker");
   if(!picker) return;
-
+if(!picker.value) picker.value=todayString();
   const monday=mondayOf(picker.value || todayString());
   picker.value=monday;
 
