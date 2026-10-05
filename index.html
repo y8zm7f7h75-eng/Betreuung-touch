@@ -202,7 +202,110 @@ background:#fff0e0;
     font-size:12px;
   }
 }
-</style>
+.week-controls{
+  margin:12px 0 18px;
+}
+
+.week-controls input{
+  font-size:18px;
+  padding:8px;
+  margin-left:8px;
+}
+
+.weekly-title{
+  font-size:22px;
+  font-weight:700;
+  margin-bottom:2px;
+}
+
+.weekly-subtitle{
+  font-size:16px;
+  margin-bottom:12px;
+}
+
+.weekly-table{
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed;
+  font-size:13px;
+}
+
+.weekly-table th,
+.weekly-table td{
+  padding:4px 3px;
+  text-align:center;
+  border-bottom:1px solid #d8d8d8;
+}
+
+.weekly-table .child-col{
+  width:24%;
+  text-align:left;
+}
+
+.weekly-table .day-col{
+  font-weight:700;
+}
+
+.weekly-table .day-col span{
+  font-weight:400;
+  font-size:11px;
+}
+
+.weekly-table .child-name{
+  text-align:left;
+  white-space:nowrap;
+  overflow:hidden;
+}
+
+.weekly-table .day-start{
+  border-left:2px solid #777;
+}
+
+.weekly-table .subhead th{
+  font-size:11px;
+  font-weight:600;
+}
+
+.weekly-table .class-row td{
+  text-align:left;
+  font-weight:700;
+  padding-top:8px;
+  padding-bottom:3px;
+  border-bottom:1px solid #999;
+}
+
+@media print{
+  body{
+    background:white;
+  }
+
+  nav,
+  .week-controls,
+  #heute,
+  #alle,
+  #wochenplanung,
+  #wergeht{
+    display:none !important;
+  }
+
+  #wochenuebersicht{
+    display:block !important;
+  }
+
+  .weekly-table{
+    font-size:10px;
+  }
+
+  .weekly-table th,
+  .weekly-table td{
+    padding:3px 2px;
+  }
+
+  @page{
+    size:A4 portrait;
+    margin:10mm;
+  }
+}</style>
 </head>
 
 <body>
@@ -214,10 +317,25 @@ background:#fff0e0;
   <button id="tab-alle" onclick="showTab('alle')">Alle Kinder</button>
   <button id="tab-woche" onclick="showTab('woche')">Wochenplanung</button>
   <button id="tab-geht" onclick="showTab('geht')">Wer geht heute?</button>
-</nav>
+<button class="tab" onclick="showTab('wochenuebersicht')">Wochenübersicht</button></nav>
 
 <main>
+<section id="wochenuebersicht" class="view">
+  <h2>Wochenübersicht</h2>
 
+  <div class="week-controls">
+    <label>
+      Woche:
+      <input
+        type="date"
+        id="weekPicker"
+        onchange="renderWeeklyOverview()"
+      >
+    </label>
+  </div>
+
+  <div id="weeklyOverview"></div>
+</section>
 <section id="heute" class="view">
   <h2>Heute</h2>
   <div id="todayList"></div>
@@ -450,7 +568,7 @@ function showTab(tab){
   if(tab==="alle") renderAll();
   if(tab==="woche") renderDailyPlan();
   if(tab==="geht") renderGoing();
-}
+if(tab==="wochenuebersicht") renderWeeklyOverview()}
 
 /* -------------------------
    HEUTE
@@ -858,7 +976,145 @@ showTab("heute");
 if("serviceWorker" in navigator){
   navigator.serviceWorker.register("sw.js");
 }
+/* -------------------------
+   WOCHENÜBERSICHT
+------------------------- */
 
+function mondayOf(dateString){
+  const d=new Date(dateString+"T12:00:00");
+  const day=d.getDay();
+  const diff=day===0 ? -6 : 1-day;
+  d.setDate(d.getDate()+diff);
+  return d.toISOString().slice(0,10);
+}
+
+function addDays(dateString,days){
+  const d=new Date(dateString+"T12:00:00");
+  d.setDate(d.getDate()+days);
+  return d.toISOString().slice(0,10);
+}
+
+function shortDate(dateString){
+  const d=new Date(dateString+"T12:00:00");
+  return d.toLocaleDateString("de-DE",{
+    day:"2-digit",
+    month:"2-digit"
+  });
+}
+
+function renderWeeklyOverview(){
+
+  const picker=document.getElementById("weekPicker");
+  if(!picker) return;
+
+  const monday=mondayOf(picker.value || todayString());
+  picker.value=monday;
+
+  const days=[
+    addDays(monday,0),
+    addDays(monday,1),
+    addDays(monday,2),
+    addDays(monday,3),
+    addDays(monday,4)
+  ];
+
+  const names=["Mo","Di","Mi","Do","Fr"];
+
+  let html=`
+    <div class="weekly-print-area">
+
+      <div class="weekly-title">
+        Wochenübersicht
+      </div>
+
+      <div class="weekly-subtitle">
+        ${shortDate(days[0])} – ${shortDate(days[4])}
+      </div>
+
+      <table class="weekly-table">
+
+        <thead>
+          <tr>
+            <th class="child-col">Kind</th>
+  `;
+
+  days.forEach((day,i)=>{
+    html+=`
+      <th colspan="2" class="day-col ${i>0 ? "day-start":""}">
+        ${names[i]}<br>
+        <span>${shortDate(day)}</span>
+      </th>
+    `;
+  });
+
+  html+=`
+          </tr>
+
+          <tr class="subhead">
+            <th></th>
+  `;
+
+  days.forEach((day,i)=>{
+    html+=`
+      <th class="${i>0 ? "day-start":""}">An</th>
+      <th>Ab</th>
+    `;
+  });
+
+  html+=`
+          </tr>
+        </thead>
+
+        <tbody>
+  `;
+
+  classes.forEach(cls=>{
+
+    html+=`
+      <tr class="class-row">
+        <td colspan="11">${cls[0]}</td>
+      </tr>
+    `;
+
+    children
+      .filter(c=>c.className===cls[0])
+      .forEach(c=>{
+
+        html+=`
+          <tr>
+            <td class="child-name">
+              ${c.name}
+            </td>
+        `;
+
+        days.forEach((day,i)=>{
+
+          const a=attendance[day]?.[c.id] || {};
+
+          html+=`
+            <td class="${i>0 ? "day-start":""}">
+              ${a.ankommen || "–"}
+            </td>
+
+            <td>
+              ${a.gehen || "–"}
+            </td>
+          `;
+        });
+
+        html+=`</tr>`;
+      });
+  });
+
+  html+=`
+        </tbody>
+      </table>
+
+    </div>
+  `;
+
+  document.getElementById("weeklyOverview").innerHTML=html;
+}
 </script>
 
 </body>
