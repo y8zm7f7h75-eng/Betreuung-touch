@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#6b8e9e">
-<link rel="manifest" href="manifest.webmanifest">
 <title>Betreuung – Touch-Tabelle</title>
+
+<link rel="manifest" href="manifest.webmanifest">
 
 <style>
 *{box-sizing:border-box}
@@ -20,28 +20,31 @@ body{
 header{
   background:#6b8e9e;
   color:white;
-  padding:18px;
+  padding:14px;
   text-align:center;
+  font-size:22px;
+  font-weight:bold;
 }
-
-h1{margin:0;font-size:28px}
-h2{margin-top:0}
 
 nav{
   display:flex;
-  gap:8px;
-  padding:10px;
+  gap:6px;
+  padding:8px;
   background:white;
   position:sticky;
   top:0;
-  z-index:5;
+  z-index:10;
   overflow-x:auto;
 }
 
 nav button{
   flex:1;
   min-width:110px;
-  background:#dce7eb;
+  padding:14px 8px;
+  border:0;
+  border-radius:10px;
+  background:#dce5e9;
+  font-size:16px;
 }
 
 nav button.active{
@@ -50,128 +53,152 @@ nav button.active{
 }
 
 main{
-  padding:14px;
-  max-width:1100px;
+  padding:12px;
+  max-width:1000px;
   margin:auto;
 }
 
-.card{
+h2{
+  margin-top:8px;
+}
+
+.section{
   background:white;
-  border-radius:16px;
-  padding:14px;
-  margin-bottom:12px;
-  box-shadow:0 2px 8px #0001;
+  border-radius:14px;
+  padding:12px;
+  margin-bottom:14px;
+  box-shadow:0 1px 4px #0001;
+}
+
+.datebar{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+input[type=date]{
+  font-size:18px;
+  padding:10px;
+  border-radius:9px;
+  border:1px solid #bbb;
+}
+
+button{
+  cursor:pointer;
+}
+
+.smallbtn{
+  border:0;
+  border-radius:9px;
+  padding:10px 13px;
+  background:#dce5e9;
+  font-size:15px;
 }
 
 .child{
-  display:grid;
-  grid-template-columns:1fr 130px 130px;
-  gap:8px;
-  align-items:center;
+  background:#fafafa;
+  border-left:7px solid #ccc;
+  border-radius:10px;
   padding:10px;
-  border-radius:12px;
-  margin:6px 0;
+  margin:8px 0;
 }
 
-.class1{border-left:12px solid #7aa7d9}
-.class2{border-left:12px solid #75b77a}
-.class3{border-left:12px solid #e2c34f}
-.class4{border-left:12px solid #d96b62}
-
-button,select{
-  border:0;
-  border-radius:12px;
-  padding:12px;
-  font-size:17px;
-}
-
-button{cursor:pointer}
-
-.child button{
-  background:#e8eef0;
-}
-
-.time{
-  font-size:20px;
+.childtitle{
   font-weight:bold;
-  text-align:center;
+  margin-bottom:8px;
 }
-
-.planned{
-  color:#888;
-  font-weight:bold;
-}
-
-.small{
-  font-size:14px;
-  color:#667;
-}
-
-.hidden{display:none}
 
 .controls{
   display:flex;
-  gap:8px;
+  gap:7px;
   flex-wrap:wrap;
-  margin-bottom:12px;
-}
-
-.controls button{
-  background:#dce7eb;
-}
-
-.controls button.active{
-  background:#6b8e9e;
-  color:white;
-}
-
-.planrow{
-  display:grid;
-  grid-template-columns:1fr 150px 100px;
-  gap:8px;
   align-items:center;
-  padding:8px;
-  border-radius:10px;
-  margin:5px 0;
-  background:#f7f9fa;
 }
 
-.planrow select{
-  width:100%;
+select{
+  font-size:17px;
+  padding:9px;
+  border-radius:8px;
+  border:1px solid #bbb;
   background:white;
 }
 
-.planned-label{
-  color:#888;
-  font-size:13px;
+.planned{
+  background:#fff4b8;
 }
 
-.actual{
-  color:#263238;
+.exception{
+  border:2px solid #e2a900;
+}
+
+.regular-row{
+  display:grid;
+  grid-template-columns:120px repeat(5,1fr);
+  gap:6px;
+  align-items:center;
+  margin:5px 0;
+}
+
+.regular-row select{
+  width:100%;
+  font-size:14px;
+  padding:7px;
+}
+
+.regular-head{
+  display:grid;
+  grid-template-columns:120px repeat(5,1fr);
+  gap:6px;
   font-weight:bold;
+  margin-bottom:5px;
 }
 
-.override{
-  background:#fff8df;
+.daybox{
+  background:#f5f7f8;
+  border-radius:8px;
+  padding:4px;
+}
+
+.going{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:9px;
+  border-radius:9px;
+  margin:5px 0;
+}
+
+.time{
+  font-size:21px;
+  font-weight:bold;
+  min-width:65px;
+}
+
+.type{
+  font-size:17px;
+}
+
+.classname{
+  font-size:12px;
+  opacity:.7;
+}
+
+.notice{
+  background:#eef5f7;
+  padding:10px;
+  border-radius:9px;
+  margin:8px 0;
 }
 
 @media(max-width:700px){
-  .child{
-    grid-template-columns:1fr 105px 105px;
+  .regular-row,
+  .regular-head{
+    grid-template-columns:80px repeat(5,1fr);
   }
 
-  .child button{
-    padding:11px 4px;
-    font-size:15px;
-  }
-
-  .planrow{
-    grid-template-columns:1fr 125px 85px;
-  }
-
-  .planrow select{
-    font-size:15px;
-    padding:10px 4px;
+  .regular-row select{
+    font-size:12px;
   }
 }
 </style>
@@ -179,428 +206,657 @@ button{cursor:pointer}
 
 <body>
 
-<header>
-<h1>Betreuung – Touch-Tabelle</h1>
-<div id="date"></div>
-</header>
+<header>Betreuung – Touch-Tabelle</header>
 
 <nav>
-<button class="active" onclick="showPage('today',this)">Heute</button>
-<button onclick="showPage('all',this)">Alle Kinder</button>
-<button onclick="showPage('week',this)">Wochenplanung</button>
-<button onclick="showPage('going',this)">Wer geht heute?</button>
+  <button id="tab-heute" onclick="showTab('heute')">Heute</button>
+  <button id="tab-alle" onclick="showTab('alle')">Alle Kinder</button>
+  <button id="tab-woche" onclick="showTab('woche')">Wochenplanung</button>
+  <button id="tab-geht" onclick="showTab('geht')">Wer geht heute?</button>
 </nav>
 
 <main>
 
-<section id="today"></section>
+<section id="heute" class="view">
+  <h2>Heute</h2>
+  <div id="todayList"></div>
+</section>
 
-<section id="all" class="hidden"></section>
+<section id="alle" class="view" style="display:none">
+  <h2>Alle Kinder</h2>
+  <div id="allList"></div>
+</section>
 
-<section id="week" class="hidden"></section>
+<section id="woche" class="view" style="display:none">
 
-<section id="going" class="hidden"></section>
+  <h2>Wochenplanung</h2>
+
+  <div class="section">
+    <div class="datebar">
+      <strong>Datum:</strong>
+      <input type="date" id="selectedDate" onchange="renderDailyPlan()">
+      <button class="smallbtn" onclick="goToday()">Heute</button>
+      <button class="smallbtn" onclick="showRegular()">Regelmäßige Woche</button>
+    </div>
+
+    <div id="dateInfo" class="notice"></div>
+  </div>
+
+  <div id="dailyPlanning"></div>
+
+  <div id="regularPlanning" style="display:none"></div>
+
+</section>
+
+<section id="geht" class="view" style="display:none">
+  <h2>Wer geht heute?</h2>
+  <div id="goingList"></div>
+</section>
 
 </main>
 
 <script>
 
-const classes=[
- ["Klasse 1 Affen","class1",9],
- ["Klasse 1 Zebra","class1",6],
- ["Klasse 2 Affen","class2",11],
- ["Klasse 2 Zebra","class2",13],
- ["Klasse 3","class3",12],
- ["Klasse 4","class4",16]
+const classes = [
+  ["Klasse 1 Affen","blau",9],
+  ["Klasse 1 Zebra","blau",6],
+  ["Klasse 2 Affen","grün",11],
+  ["Klasse 2 Zebra","grün",13],
+  ["Klasse 3","gelb",12],
+  ["Klasse 4","rot",16]
 ];
 
 const children=[];
 let number=1;
 
 classes.forEach(c=>{
- for(let i=0;i<c[2];i++){
-   children.push({
-     id:number,
-     name:"Kind "+(number+1),
-     className:c[0],
-     color:c[1]
-   });
-   number++;
- }
+  for(let i=0;i<c[2];i++){
+    children.push({
+      id:"kind"+number,
+      name:"Kind "+number,
+      className:c[0],
+      color:c[1]
+    });
+    number++;
+  }
 });
 
 const times=[
- "11:00","12:00","12:45","13:00","13:10",
- "13:45","14:00","14:30","14:35","15:00",
- "15:30","16:00"
+  "",
+  "11:00",
+  "12:00",
+  "12:45",
+  "13:00",
+  "13:10",
+  "13:45",
+  "14:00",
+  "14:30",
+  "14:35",
+  "15:00",
+  "15:30",
+  "16:00"
 ];
 
-const types=[
- ["","—"],
- ["B","B"],
- ["•","•"],
- ["Pp","Pp"],
- ["H","H"],
- ["A","A"]
+const types=["","B","•","Pp","H","A"];
+
+const weekdayNames=[
+  "Sonntag",
+  "Montag",
+  "Dienstag",
+  "Mittwoch",
+  "Donnerstag",
+  "Freitag",
+  "Samstag"
 ];
 
-let selectedDate=new Date();
+/* -------------------------
+   SPEICHER
+------------------------- */
 
-function dateKey(date){
- return date.toISOString().slice(0,10);
+function load(key, fallback){
+  try{
+    const x=localStorage.getItem(key);
+    return x ? JSON.parse(x) : fallback;
+  }catch(e){
+    return fallback;
+  }
 }
 
-function todayKey(){
- return dateKey(new Date());
+function save(key,value){
+  localStorage.setItem(key,JSON.stringify(value));
 }
 
-function actualKey(id,date=todayKey()){
- return "actual_"+id+"_"+date;
+let attendance=load("attendance",{});
+let dailyPlans=load("dailyPlans",{});
+let regularPlans=load("regularPlans",{});
+
+/*
+  Falls eine ältere Version bereits "actuals" benutzt hat,
+  werden die Daten übernommen.
+*/
+if(Object.keys(attendance).length===0){
+  const old=load("actuals",{});
+  if(Object.keys(old).length){
+    attendance=old;
+    save("attendance",attendance);
+  }
 }
 
-function planKey(id,date){
- return "plan_"+id+"_"+date;
-}
+/* -------------------------
+   HILFSFUNKTIONEN
+------------------------- */
 
-function regularKey(id,weekday){
- return "regular_"+id+"_"+weekday;
-}
-
-function now(){
- return new Date().toLocaleTimeString("de-DE",{
-   hour:"2-digit",
-   minute:"2-digit"
- });
-}
-
-function saveActual(id,type){
- let key=actualKey(id);
- let data=JSON.parse(localStorage.getItem(key)||"{}");
- data[type]=now();
- localStorage.setItem(key,JSON.stringify(data));
- render();
-}
-
-function getActual(id,date=todayKey()){
- return JSON.parse(localStorage.getItem(actualKey(id,date))||"{}");
-}
-
-function getPlan(id,date){
- let key=planKey(id,date);
- let saved=localStorage.getItem(key);
-
- if(saved){
-   return JSON.parse(saved);
- }
-
- let d=new Date(date+"T12:00:00");
- let weekday=d.getDay();
-
- let regular=localStorage.getItem(regularKey(id,weekday));
-
- if(regular){
-   return JSON.parse(regular);
- }
-
- return {time:"",type:""};
-}
-
-function savePlan(id,date,time,type,regular){
-
- let data={time:time,type:type};
-
- if(regular){
-   let weekday=new Date(date+"T12:00:00").getDay();
-   localStorage.setItem(
-     regularKey(id,weekday),
-     JSON.stringify(data)
-   );
- }else{
-   localStorage.setItem(
-     planKey(id,date),
-     JSON.stringify(data)
-   );
- }
-
- render();
-}
-
-function clearPlan(id,date){
- localStorage.removeItem(planKey(id,date));
- render();
+function todayString(){
+  const d=new Date();
+  return d.toISOString().slice(0,10);
 }
 
 function formatDate(date){
- return new Date(date+"T12:00:00")
- .toLocaleDateString("de-DE",{
-   weekday:"long",
-   day:"2-digit",
-   month:"2-digit",
-   year:"numeric"
- });
+  const d=new Date(date+"T12:00:00");
+  return d.toLocaleDateString("de-DE",{
+    weekday:"long",
+    day:"2-digit",
+    month:"2-digit",
+    year:"numeric"
+  });
 }
 
-function render(){
-
- document.getElementById("date").textContent=
-   new Date().toLocaleDateString("de-DE",{
-     weekday:"long",
-     day:"2-digit",
-     month:"2-digit",
-     year:"numeric"
-   });
-
- renderToday();
- renderAll();
- renderWeek();
- renderGoing();
+function weekday(date){
+  return new Date(date+"T12:00:00").getDay();
 }
+
+function childColor(c){
+  const map={
+    blau:"#8faec0",
+    grün:"#9dbb9d",
+    gelb:"#d5bd67",
+    rot:"#c98f8f"
+  };
+  return map[c.color] || "#ccc";
+}
+
+function options(list,selected){
+  return list.map(x=>{
+    const value=x;
+    const text=x || "keine Planung";
+    return `<option value="${value}" ${value===selected?"selected":""}>${text}</option>`;
+  }).join("");
+}
+
+function typeOptions(selected){
+  return types.map(x=>{
+    const text=x || "–";
+    return `<option value="${x}" ${x===selected?"selected":""}>${text}</option>`;
+  }).join("");
+}
+
+/* -------------------------
+   PLANUNG ERMITTELN
+------------------------- */
+
+function getRegularPlan(childId,date){
+  const wd=weekday(date);
+
+  if(wd===0 || wd===6) return {
+    time:"",
+    type:""
+  };
+
+  return (
+    regularPlans[childId] &&
+    regularPlans[childId][wd]
+  ) || {
+    time:"",
+    type:""
+  };
+}
+
+function getPlan(childId,date){
+  if(
+    dailyPlans[date] &&
+    dailyPlans[date][childId]
+  ){
+    return {
+      ...dailyPlans[date][childId],
+      exception:true
+    };
+  }
+
+  return {
+    ...getRegularPlan(childId,date),
+    exception:false
+  };
+}
+
+/* -------------------------
+   TABS
+------------------------- */
+
+function showTab(tab){
+
+  document.querySelectorAll(".view").forEach(x=>{
+    x.style.display="none";
+  });
+
+  document.querySelectorAll("nav button").forEach(x=>{
+    x.classList.remove("active");
+  });
+
+  document.getElementById(tab).style.display="block";
+  document.getElementById("tab-"+tab).classList.add("active");
+
+  if(tab==="heute") renderToday();
+  if(tab==="alle") renderAll();
+  if(tab==="woche") renderDailyPlan();
+  if(tab==="geht") renderGoing();
+}
+
+/* -------------------------
+   HEUTE
+------------------------- */
 
 function renderToday(){
 
- let el=document.getElementById("today");
+  const date=todayString();
 
- el.innerHTML=
- "<div class='card'><h2>Wer ist heute da?</h2>";
+  let html="";
 
- children.forEach(c=>{
+  children.forEach(c=>{
 
-   let d=getActual(c.id);
+    const a=attendance[date]?.[c.id] || {};
 
-   el.innerHTML+=`
-   <div class="child ${c.color}">
-     <div>
-       <strong>${c.name}</strong>
-       <div class="small">${c.className}</div>
-     </div>
+    html+=`
+      <div class="child"
+           style="border-left-color:${childColor(c)}">
 
-     <button onclick="saveActual(${c.id},'come')">
-       Ankommen<br>
-       <span class="time">${d.come||"–"}</span>
-     </button>
+        <div class="childtitle">
+          ${c.name}
+          <span class="classname">${c.className}</span>
+        </div>
 
-     <button onclick="saveActual(${c.id},'go')">
-       Gehen<br>
-       <span class="time">${d.go||"–"}</span>
-     </button>
-   </div>`;
- });
+        <div class="controls">
 
- el.innerHTML+="</div>";
+          <button class="smallbtn"
+            onclick="setArrival('${c.id}')">
+            ${a.ankommen ? "Ankommen "+a.ankommen : "Ankommen"}
+          </button>
+
+          <button class="smallbtn"
+            onclick="setDeparture('${c.id}')">
+            ${a.gehen ? "Gehen "+a.gehen : "Gehen"}
+          </button>
+
+        </div>
+      </div>
+    `;
+  });
+
+  document.getElementById("todayList").innerHTML=html;
 }
+
+function currentTime(){
+  return new Date().toLocaleTimeString("de-DE",{
+    hour:"2-digit",
+    minute:"2-digit"
+  });
+}
+
+function setArrival(id){
+
+  const date=todayString();
+
+  if(!attendance[date]) attendance[date]={};
+
+  attendance[date][id]=attendance[date][id] || {};
+
+  attendance[date][id].ankommen=currentTime();
+
+  save("attendance",attendance);
+
+  renderToday();
+}
+
+function setDeparture(id){
+
+  const date=todayString();
+
+  if(!attendance[date]) attendance[date]={};
+
+  attendance[date][id]=attendance[date][id] || {};
+
+  attendance[date][id].gehen=currentTime();
+
+  save("attendance",attendance);
+
+  renderToday();
+}
+
+/* -------------------------
+   ALLE KINDER
+------------------------- */
 
 function renderAll(){
 
- let el=document.getElementById("all");
+  let html="";
 
- el.innerHTML=
- "<div class='card'><h2>Alle 67 Kinder</h2>";
+  classes.forEach(c=>{
 
- children.forEach(c=>{
-   el.innerHTML+=`
-   <div class="child ${c.color}">
-     <div>
-       <strong>${c.name}</strong>
-       <div class="small">${c.className}</div>
-     </div>
-     <div></div>
-     <div></div>
-   </div>`;
- });
+    html+=`
+      <div class="section">
+        <h3>${c[0]}</h3>
+    `;
 
- el.innerHTML+="</div>";
+    children
+      .filter(x=>x.className===c[0])
+      .forEach(x=>{
+        html+=`
+          <div>${x.name}</div>
+        `;
+      });
+
+    html+="</div>";
+  });
+
+  document.getElementById("allList").innerHTML=html;
 }
 
-function renderWeek(){
+/* -------------------------
+   DATUM
+------------------------- */
 
- let el=document.getElementById("week");
-
- let date=dateKey(selectedDate);
-
- el.innerHTML=`
- <div class="card">
-   <h2>Wochenplanung</h2>
-
-   <div class="controls">
-     <button onclick="changeDay(-1)">◀</button>
-     <button class="active">${formatDate(date)}</button>
-     <button onclick="changeDay(1)">▶</button>
-   </div>
-
-   <p class="small">
-     Grau = regelmäßige Planung. Gelb = kurzfristige Änderung.
-   </p>
- `;
-
- classes.forEach(c=>{
-
-   el.innerHTML+=`
-   <h3>${c[0]}</h3>
-   <div>`;
-
-   children
-   .filter(x=>x.className===c[0])
-   .forEach(child=>{
-
-     let p=getPlan(child.id,date);
-
-     let regular=false;
-     let weekday=new Date(date+"T12:00:00").getDay();
-
-     if(
-       localStorage.getItem(regularKey(child.id,weekday)) &&
-       !localStorage.getItem(planKey(child.id,date))
-     ){
-       regular=true;
-     }
-
-     let options=
-       `<option value="">keine Planung</option>`+
-       times.map(t=>
-         `<option value="${t}" ${p.time===t?"selected":""}>${t}</option>`
-       ).join("");
-
-     let typeOptions=types.map(t=>
-       `<option value="${t[0]}" ${p.type===t[0]?"selected":""}>${t[1]}</option>`
-     ).join("");
-
-     el.innerHTML+=`
-     <div class="planrow ${!regular&&p.time?"override":""}">
-       <div>
-         <strong>${child.name}</strong>
-         ${regular?
-           "<div class='planned-label'>regelmäßig</div>":
-           p.time?"<div class='planned-label'>diese Woche</div>":""
-         }
-       </div>
-
-       <select
-         onchange="changePlan(${child.id},'${date}',this.value,'time')">
-         ${options}
-       </select>
-
-       <select
-         onchange="changePlan(${child.id},'${date}',this.value,'type')">
-         ${typeOptions}
-       </select>
-     </div>`;
-   });
-
-   el.innerHTML+=`</div>`;
- });
-
- el.innerHTML+="</div>";
+function goToday(){
+  document.getElementById("selectedDate").value=todayString();
+  renderDailyPlan();
 }
 
-function changePlan(id,date,value,field){
+/* -------------------------
+   TAGESPLANUNG
+------------------------- */
 
- let p=getPlan(id,date);
+function renderDailyPlan(){
 
- if(field==="time") p.time=value;
- if(field==="type") p.type=value;
+  const date=
+    document.getElementById("selectedDate").value ||
+    todayString();
 
- localStorage.setItem(
-   planKey(id,date),
-   JSON.stringify(p)
- );
+  document.getElementById("selectedDate").value=date;
 
- render();
+  document.getElementById("regularPlanning").style.display="none";
+  document.getElementById("dailyPlanning").style.display="block";
+
+  document.getElementById("dateInfo").innerHTML=
+    `<strong>${formatDate(date)}</strong>
+     – Tippe hier die Planung für genau diesen Tag ein.`;
+
+  let html="";
+
+  classes.forEach(cls=>{
+
+    html+=`
+      <div class="section">
+        <h3>${cls[0]}</h3>
+    `;
+
+    children
+      .filter(c=>c.className===cls[0])
+      .forEach(c=>{
+
+        const plan=getPlan(c.id,date);
+
+        html+=`
+          <div class="child
+            ${plan.time ? "planned":""}
+            ${plan.exception ? "exception":""}"
+            style="border-left-color:${childColor(c)}">
+
+            <div class="childtitle">
+              ${c.name}
+              ${plan.exception
+                ? `<span class="classname">Ausnahme für diesen Tag</span>`
+                : `<span class="classname">regelmäßige Planung</span>`
+              }
+            </div>
+
+            <div class="controls">
+
+              <select
+                onchange="changeDailyPlan('${date}','${c.id}',this.value,null)">
+                ${options(times,plan.time)}
+              </select>
+
+              <select
+                onchange="changeDailyPlan('${date}','${c.id}',null,this.value)">
+                ${typeOptions(plan.type)}
+              </select>
+
+              ${
+                plan.exception
+                ?
+                `<button class="smallbtn"
+                   onclick="useRegular('${date}','${c.id}')">
+                   Regelmäßig verwenden
+                 </button>`
+                :
+                ""
+              }
+
+            </div>
+
+          </div>
+        `;
+      });
+
+    html+="</div>";
+  });
+
+  document.getElementById("dailyPlanning").innerHTML=html;
 }
 
-function changeDay(amount){
+function changeDailyPlan(date,id,time,type){
 
- selectedDate.setDate(
-   selectedDate.getDate()+amount
- );
+  if(!dailyPlans[date]){
+    dailyPlans[date]={};
+  }
 
- render();
+  const old=dailyPlans[date][id] || getRegularPlan(id,date);
+
+  dailyPlans[date][id]={
+    time:time===null ? old.time : time,
+    type:type===null ? old.type : type
+  };
+
+  save("dailyPlans",dailyPlans);
+
+  renderDailyPlan();
 }
 
-function setRegularFromCurrent(id,date){
+function useRegular(date,id){
 
- let p=getPlan(id,date);
+  if(dailyPlans[date]){
+    delete dailyPlans[date][id];
 
- if(!p.time && !p.type){
-   alert("Bitte zuerst Zeit oder Art auswählen.");
-   return;
- }
+    if(Object.keys(dailyPlans[date]).length===0){
+      delete dailyPlans[date];
+    }
 
- let weekday=new Date(date+"T12:00:00").getDay();
+    save("dailyPlans",dailyPlans);
+  }
 
- localStorage.setItem(
-   regularKey(id,weekday),
-   JSON.stringify(p)
- );
-
- render();
+  renderDailyPlan();
 }
+
+/* -------------------------
+   REGELMÄSSIGE WOCHE
+------------------------- */
+
+function showRegular(){
+
+  document.getElementById("dailyPlanning").style.display="none";
+  document.getElementById("regularPlanning").style.display="block";
+
+  let html=`
+    <div class="section">
+
+      <h2>Regelmäßige Woche</h2>
+
+      <div class="notice">
+        Diese Planung gilt automatisch für alle zukünftigen
+        entsprechenden Wochentage. Eine einzelne Tagesplanung
+        kann sie jederzeit überschreiben.
+      </div>
+
+      <div class="regular-head">
+        <div>Kind</div>
+        <div>Mo</div>
+        <div>Di</div>
+        <div>Mi</div>
+        <div>Do</div>
+        <div>Fr</div>
+      </div>
+  `;
+
+  classes.forEach(cls=>{
+
+    html+=`<h3>${cls[0]}</h3>`;
+
+    children
+      .filter(c=>c.className===cls[0])
+      .forEach(c=>{
+
+        html+=`
+          <div class="regular-row">
+
+            <div>
+              <strong>${c.name}</strong>
+            </div>
+        `;
+
+        for(let wd=1;wd<=5;wd++){
+
+          const p=
+            regularPlans[c.id]?.[wd] ||
+            {time:"",type:""};
+
+          html+=`
+            <div class="daybox">
+
+              <select
+                onchange="changeRegular('${c.id}',${wd},'time',this.value)">
+                ${options(times,p.time)}
+              </select>
+
+              <select
+                onchange="changeRegular('${c.id}',${wd},'type',this.value)">
+                ${typeOptions(p.type)}
+              </select>
+
+            </div>
+          `;
+        }
+
+        html+="</div>";
+      });
+  });
+
+  html+=`
+      </div>
+  `;
+
+  document.getElementById("regularPlanning").innerHTML=html;
+}
+
+function changeRegular(id,wd,field,value){
+
+  if(!regularPlans[id]){
+    regularPlans[id]={};
+  }
+
+  if(!regularPlans[id][wd]){
+    regularPlans[id][wd]={
+      time:"",
+      type:""
+    };
+  }
+
+  regularPlans[id][wd][field]=value;
+
+  save("regularPlans",regularPlans);
+}
+
+/* -------------------------
+   WER GEHT HEUTE?
+------------------------- */
 
 function renderGoing(){
 
- let el=document.getElementById("going");
- let date=todayKey();
+  const date=todayString();
 
- let list=[];
+  const list=[];
 
- children.forEach(c=>{
-   let p=getPlan(c.id,date);
+  children.forEach(c=>{
 
-   if(p.time){
-     list.push({
-       child:c,
-       plan:p
-     });
-   }
- });
+    const p=getPlan(c.id,date);
 
- list.sort((a,b)=>
-   a.plan.time.localeCompare(b.plan.time)
- );
+    if(p.time){
 
- el.innerHTML=
- "<div class='card'><h2>Wer geht heute?</h2>";
+      list.push({
+        child:c,
+        time:p.time,
+        type:p.type
+      });
+    }
+  });
 
- if(!list.length){
-   el.innerHTML+=
-   "<p>Für heute sind noch keine geplanten Zeiten eingetragen.</p>";
- }
+  list.sort((a,b)=>
+    a.time.localeCompare(b.time)
+  );
 
- list.forEach(x=>{
-   el.innerHTML+=`
-   <div class="child ${x.child.color}">
-     <div>
-       <strong>${x.child.name}</strong>
-       <div class="small">${x.child.className}</div>
-     </div>
-     <div class="time planned">${x.plan.time}</div>
-     <div class="time planned">${x.plan.type||"—"}</div>
-   </div>`;
- });
+  if(!list.length){
 
- el.innerHTML+="</div>";
+    document.getElementById("goingList").innerHTML=
+      `<div class="notice">
+        Für heute ist noch keine Abhol-/Gehplanung eingetragen.
+      </div>`;
+
+    return;
+  }
+
+  let html="";
+
+  list.forEach(x=>{
+
+    html+=`
+      <div class="going"
+        style="border-left:7px solid ${childColor(x.child)}">
+
+        <div class="time">${x.time}</div>
+
+        <div>
+          <strong>${x.child.name}</strong>
+          <div class="classname">${x.child.className}</div>
+        </div>
+
+        <div class="type">${x.type || ""}</div>
+
+      </div>
+    `;
+  });
+
+  document.getElementById("goingList").innerHTML=html;
 }
 
-function showPage(id,btn){
+/* -------------------------
+   START
+------------------------- */
 
- document.querySelectorAll("main section")
- .forEach(s=>s.classList.add("hidden"));
+document.getElementById("selectedDate").value=todayString();
 
- document.getElementById(id)
- .classList.remove("hidden");
+showTab("heute");
 
- document.querySelectorAll("nav button")
- .forEach(b=>b.classList.remove("active"));
-
- btn.classList.add("active");
-
- render();
-}
-
+/* Service Worker */
 if("serviceWorker" in navigator){
- navigator.serviceWorker.register("sw.js");
+  navigator.serviceWorker.register("sw.js");
 }
-
-render();
 
 </script>
 
