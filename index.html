@@ -356,7 +356,7 @@ background:#fff0e0;
 
   <h2>Wochenplanung</h2>
 
- <div class="section ${cls[0]==="Klasse 2 Zebra" ? "print-page-break" : ""}">
+ <div class="section">
     <div class="datebar">
       <strong>Datum:</strong>
       <input type="date" id="selectedDate" onchange="renderDailyPlan()">
@@ -1082,7 +1082,7 @@ if(!picker.value) picker.value=todayString();
   classes.forEach(cls=>{
 
     html+=`
-      <tr class="class-row">
+      <tr class="class-row" ${cls[0]==="Klasse 2 Zebra" ? "print-page-break" : ""}">
         <td colspan="11">${cls[0]}</td>
       </tr>
     `;
