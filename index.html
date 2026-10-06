@@ -356,7 +356,7 @@ background:#fff0e0;
 
   <h2>Wochenplanung</h2>
 
-  <div class="section">
+ <div class="section ${cls[0]==="Klasse 2 Zebra" ? "print-page-break" : ""}">
     <div class="datebar">
       <strong>Datum:</strong>
       <input type="date" id="selectedDate" onchange="renderDailyPlan()">
