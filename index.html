@@ -291,7 +291,7 @@ background:#fff0e0;
   }
 
   .weekly-table{
-  font-size:7px;
+  font-size:8px;
 }
 
 .weekly-table th,
@@ -302,10 +302,7 @@ background:#fff0e0;
   margin-top:0 !important;
   margin-bottom:0 !important;
 }
-  .print-page-break{
-    break-before:page;
-    page-break-before:always;
-  }
+  
     @page{
     size:A4 portrait;
     margin:2mm;
@@ -1082,7 +1079,7 @@ if(!picker.value) picker.value=todayString();
   classes.forEach(cls=>{
 
     html+=`
-      <tr class="class-row" ${cls[0]==="Klasse 2 Zebra" ? "print-page-break" : ""}">
+      <tr class="class-row">
         <td colspan="11">${cls[0]}</td>
       </tr>
     `;
