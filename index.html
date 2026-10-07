@@ -800,6 +800,15 @@ function renderDailyPlan(){
   value="${plan.time && !times.includes(plan.time) ? plan.time : ""}"
   onchange="changeDailyPlan('${date}','${c.id}',this.value,null)"
   title="Eigene Uhrzeit eingeben">
+ 
+  <select
+
+  onchange="changeDailyPlan('${date}','${c.id}',null,this.value)">
+
+  ${typeOptions(plan.type)}
+
+</select>
+
  <input
 
   type="text"
