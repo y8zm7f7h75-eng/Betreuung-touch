@@ -860,6 +860,31 @@ function renderDailyPlan(){
 
   renderDailyPlan();
 }
+  function useRegular(date,id){
+
+  if(dailyPlans[date] && dailyPlans[date][id]){
+
+    delete dailyPlans[date][id];
+
+  }
+
+  if(
+
+    dailyPlans[date] &&
+
+    Object.keys(dailyPlans[date]).length===0
+
+  ){
+
+    delete dailyPlans[date];
+
+  }
+
+  save("dailyPlans",dailyPlans);
+
+  renderDailyPlan();
+
+}
 /* -------------------------
    REGELMÄSSIGE WOCHE
 ------------------------- */
