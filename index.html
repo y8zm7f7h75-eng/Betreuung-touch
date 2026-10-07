@@ -963,7 +963,7 @@ function renderGoing(){
 
     const p=getPlan(c.id,date);
 
-    if(p.time){
+    if(p.time && p.type !== "-"){
 
       list.push({
         child:c,
