@@ -811,27 +811,7 @@ function renderDailyPlan(){
   onchange="changeDailyPlan('${date}','${c.id}',null,null,this.value)"
 
   title="Zusätzliche Information">
-  function changeDailyPlan(date,id,time,type,info){
-
-  if(!dailyPlans[date]){
-
-    dailyPlans[date]={};
-
-  }
-
-  const old=dailyPlans[date][id] || getRegularPlan(id,date);
-
-  dailyPlans[date][id]={
-
-    time:time===null ? old.time : time,
-
-    type:type===null ? old.type : type,
-
-    info:info===undefined ? (old.info || "") : info
-
-  };
-
-  save("dailyPlans",dailyPlans);             
+              
 
               ${
                 plan.exception
