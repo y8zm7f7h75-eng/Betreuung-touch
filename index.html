@@ -174,7 +174,14 @@ background:#fff0e0;
   border-radius:9px;
   margin:5px 0;
 }
+.going-info{
 
+  font-size:14px;
+
+  color:#555;
+
+  margin-left:8px;
+}
 .time{
   font-size:21px;
   font-weight:bold;
@@ -793,7 +800,38 @@ function renderDailyPlan(){
   value="${plan.time && !times.includes(plan.time) ? plan.time : ""}"
   onchange="changeDailyPlan('${date}','${c.id}',this.value,null)"
   title="Eigene Uhrzeit eingeben">
-              
+ <input
+
+  type="text"
+
+  value="${plan.info || ""}"
+
+  placeholder="Info"
+
+  onchange="changeDailyPlan('${date}','${c.id}',null,null,this.value)"
+
+  title="Zusätzliche Information">
+  function changeDailyPlan(date,id,time,type,info){
+
+  if(!dailyPlans[date]){
+
+    dailyPlans[date]={};
+
+  }
+
+  const old=dailyPlans[date][id] || getRegularPlan(id,date);
+
+  dailyPlans[date][id]={
+
+    time:time===null ? old.time : time,
+
+    type:type===null ? old.type : type,
+
+    info:info===undefined ? (old.info || "") : info
+
+  };
+
+  save("dailyPlans",dailyPlans);             
 
               ${
                 plan.exception
@@ -818,24 +856,30 @@ function renderDailyPlan(){
   document.getElementById("dailyPlanning").innerHTML=html;
 }
 
-function changeDailyPlan(date,id,time,type){
+function changeDailyPlan(date,id,time,type,info){
 
   if(!dailyPlans[date]){
+
     dailyPlans[date]={};
+
   }
 
   const old=dailyPlans[date][id] || getRegularPlan(id,date);
 
   dailyPlans[date][id]={
+
     time:time===null ? old.time : time,
-    type:type===null ? old.type : type
+
+    type:type===null ? old.type : type,
+
+    info:info===undefined ? (old.info || "") : info
+
   };
 
   save("dailyPlans",dailyPlans);
 
   renderDailyPlan();
 }
-
 function useRegular(date,id){
 
   if(dailyPlans[date]){
@@ -968,7 +1012,8 @@ function renderGoing(){
       list.push({
         child:c,
         time:p.time,
-        type:p.type
+        type:p.type,
+        info:p.info || ""
       });
     }
   });
@@ -1003,7 +1048,7 @@ function renderGoing(){
         </div>
 
         <div class="type">${x.type || ""}</div>
-
+        ${x.info ? ˋ<div class="going-info">${x.info}</divˋ : ""}
       </div>
     `;
   });
