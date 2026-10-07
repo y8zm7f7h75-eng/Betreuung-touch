@@ -995,7 +995,15 @@ function changeRegular(id,wd,field,value){
 /* -------------------------
    WER GEHT HEUTE?
 ------------------------- */
+let checkedGoing={};
 
+function toggleGoing(id){
+
+  checkedGoing[id]=!checkedGoing[id];
+
+  renderGoing();
+
+}
 function renderGoing(){
 
   const date=todayString();
