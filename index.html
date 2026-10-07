@@ -315,6 +315,10 @@ background:#fff0e0;
     font-size:8px !important;
     margin:0 !important;
   }
+  .weekly-table .print-page-break{
+    break-befor:page;
+    page-break-before:always;
+  }
 
   .weekly-table th,
   .weekly-table td{
@@ -1097,7 +1101,7 @@ if(!picker.value) picker.value=todayString();
   classes.forEach(cls=>{
 
     html+=`
-      <tr class="class-row">
+      <tr class="class-row ${cls[0]==="Klasse 3" ? "print-page-break" : ""}">
         <td colspan="11">${cls[0]}</td>
       </tr>
     `;
