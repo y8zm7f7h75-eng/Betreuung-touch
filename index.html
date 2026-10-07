@@ -1050,8 +1050,12 @@ function renderGoing(){
         <div class="time">${x.time}</div>
 
         <div>
-          <strong>${x.child.name}</strong>
-        </div>
+          <input
+            type="checkbox"
+            ${checkedGoing[x.child.id] ? "checked" : ""}
+            onchange="toggleGoing('${x.child.id}')">
+         <strong>${x.child.name}</strong>
+       </div>
 
         <div class="type">${x.type || ""}</div>
         ${x.info ? `<div class="going-info">${x.info}</div>` : ""}
