@@ -854,9 +854,9 @@ function renderDailyPlan(){
   });
 
   document.getElementById("dailyPlanning").innerHTML=html;
-}
+  }
 
-function changeDailyPlan(date,id,time,type,info){
+  function changeDailyPlan(date,id,time,type,info){
 
   if(!dailyPlans[date]){
 
@@ -872,7 +872,7 @@ function changeDailyPlan(date,id,time,type,info){
 
     type:type===null ? old.type : type,
 
-    info:info===undefined ? (old.info || "") : info
+     info:info===undefined ? (old.info || "") : info
 
   };
 
@@ -880,21 +880,6 @@ function changeDailyPlan(date,id,time,type,info){
 
   renderDailyPlan();
 }
-function useRegular(date,id){
-
-  if(dailyPlans[date]){
-    delete dailyPlans[date][id];
-
-    if(Object.keys(dailyPlans[date]).length===0){
-      delete dailyPlans[date];
-    }
-
-    save("dailyPlans",dailyPlans);
-  }
-
-  renderDailyPlan();
-}
-
 /* -------------------------
    REGELMÄSSIGE WOCHE
 ------------------------- */
