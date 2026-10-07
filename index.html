@@ -315,6 +315,11 @@ background:#fff0e0;
     font-size:8px !important;
     margin:0 !important;
   }
+  .weekly-page-break{
+    break-bevore:page;
+    page-break-bevore:always;
+    high:0;
+  }
   .weekly-table .print-page-break{
     break-befor:page;
     page-break-before:always;
@@ -1051,99 +1056,276 @@ if(!picker.value) picker.value=todayString();
   const names=["Mo","Di","Mi","Do","Fr"];
 
   let html=`
-    <div class="weekly-print-area">
 
-      <div class="weekly-title">
-        Wochenübersicht
-      </div>
+  <div class="weekly-print-area">
 
-      <div class="weekly-subtitle">
-        ${shortDate(days[0])} – ${shortDate(days[4])}
-      </div>
+    <div class="weekly-title">
 
-      <table class="weekly-table">
-
-        <thead>
-          <tr>
-            <th class="child-col">Kind</th>
-  `;
-
-  days.forEach((day,i)=>{
-    html+=`
-      <th colspan="2" class="day-col ${i>0 ? "day-start":""}">
-        ${names[i]}<br>
-        <span>${shortDate(day)}</span>
-      </th>
-    `;
-  });
-
-  html+=`
-          </tr>
-
-          <tr class="subhead">
-            <th></th>
-  `;
-
-  days.forEach((day,i)=>{
-    html+=`
-      <th class="${i>0 ? "day-start":""}">An</th>
-      <th>Ab</th>
-    `;
-  });
-
-  html+=`
-          </tr>
-        </thead>
-
-        <tbody>
-  `;
-
-  classes.forEach(cls=>{
-
-    html+=`
-      <tr class="class-row ${cls[0]==="Klasse 3" ? "print-page-break" : ""}">
-        <td colspan="11">${cls[0]}</td>
-      </tr>
-    `;
-
-    children
-      .filter(c=>c.className===cls[0])
-      .forEach(c=>{
-
-        html+=`
-          <tr>
-            <td class="child-name">
-              ${c.name}
-            </td>
-        `;
-
-        days.forEach((day,i)=>{
-
-          const a=attendance[day]?.[c.id] || {};
-
-          html+=`
-            <td class="${i>0 ? "day-start":""}">
-              ${a.ankommen || "–"}
-            </td>
-
-            <td>
-              ${a.gehen || "–"}
-            </td>
-          `;
-        });
-
-        html+=`</tr>`;
-      });
-  });
-
-  html+=`
-        </tbody>
-      </table>
+      Wochenübersicht
 
     </div>
+
+    <div class="weekly-subtitle">
+
+      ${shortDate(days[0])} – ${shortDate(days[4])}
+
+    </div>
+
+    <table class="weekly-table">
+
+      <thead>
+
+        <tr>
+
+          <th class="child-col">Kind</th>
+
+`;
+
+days.forEach((day,i)=>{
+
+  html+=`
+
+    <th colspan="2" class="day-col ${i>0 ? "day-start":""}">
+
+      ${names[i]}<br>
+
+      <span>${shortDate(day)}</span>
+
+    </th>
+
   `;
 
-  document.getElementById("weeklyOverview").innerHTML=html;
+});
+
+html+=`
+
+        </tr>
+
+        <tr class="subhead">
+
+          <th></th>
+
+`;
+
+days.forEach((day,i)=>{
+
+  html+=`
+
+    <th class="${i>0 ? "day-start":""}">An</th>
+
+    <th>Ab</th>
+
+  `;
+
+});
+
+html+=`
+
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+`;
+
+/* Erste Seite: Klasse 1 Affen bis Klasse 2 Zebra */
+
+classes.slice(0,4).forEach(cls=>{
+
+  html+=`
+
+    <tr class="class-row">
+
+      <td colspan="11">${cls[0]}</td>
+
+    </tr>
+
+  `;
+
+  children
+
+    .filter(c=>c.className===cls[0])
+
+    .forEach(c=>{
+
+      html+=`
+
+        <tr>
+
+          <td class="child-name">
+
+            ${c.name}
+
+          </td>
+
+      `;
+
+      days.forEach((day,i)=>{
+
+        const a=attendance[day]?.[c.id] || {};
+
+        html+=`
+
+          <td class="${i>0 ? "day-start":""}">
+
+            ${a.ankommen || "–"}
+
+          </td>
+
+          <td>
+
+            ${a.gehen || "–"}
+
+          </td>
+
+        `;
+
+      });
+
+      html+=`</tr>`;
+
+    });
+
+});
+
+html+=`
+
+      </tbody>
+
+    </table>
+
+    <div class="weekly-page-break"></div>
+
+    <table class="weekly-table">
+
+      <thead>
+
+        <tr>
+
+          <th class="child-col">Kind</th>
+
+`;
+
+days.forEach((day,i)=>{
+
+  html+=`
+
+    <th colspan="2" class="day-col ${i>0 ? "day-start":""}">
+
+      ${names[i]}<br>
+
+      <span>${shortDate(day)}</span>
+
+    </th>
+
+  `;
+
+});
+
+html+=`
+
+        </tr>
+
+        <tr class="subhead">
+
+          <th></th>
+
+`;
+
+days.forEach((day,i)=>{
+
+  html+=`
+
+    <th class="${i>0 ? "day-start":""}">An</th>
+
+    <th>Ab</th>
+
+  `;
+
+});
+
+html+=`
+
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+`;
+
+/* Zweite Seite: Klasse 3 und Klasse 4 */
+
+classes.slice(4).forEach(cls=>{
+
+  html+=`
+
+    <tr class="class-row">
+
+      <td colspan="11">${cls[0]}</td>
+
+    </tr>
+
+  `;
+
+  children
+
+    .filter(c=>c.className===cls[0])
+
+    .forEach(c=>{
+
+      html+=`
+
+        <tr>
+
+          <td class="child-name">
+
+            ${c.name}
+
+          </td>
+
+      `;
+
+      days.forEach((day,i)=>{
+
+        const a=attendance[day]?.[c.id] || {};
+
+        html+=`
+
+          <td class="${i>0 ? "day-start":""}">
+
+            ${a.ankommen || "–"}
+
+          </td>
+
+          <td>
+
+            ${a.gehen || "–"}
+
+          </td>
+
+        `;
+
+      });
+
+      html+=`</tr>`;
+
+    });
+
+});
+
+html+=`
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+`;
+
+document.getElementById("weeklyOverview").innerHTML=html;
 }
 </script>
 
