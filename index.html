@@ -373,7 +373,7 @@ background:#fff0e0;
   <div id="weeklyOverview"></div>
 </section>
 <section id="heute" class="view">
-  <h2>Heute</h2>
+  <h2>Heute - <span id="heuteDatum"></span></h2>
   <div id="todayList"></div>
 </section>
 
@@ -617,6 +617,7 @@ function showTab(tab){
 function renderToday(){
 
   const date=todayString();
+  document.getElementById("heuteDatum").textContent = shortDate(date);
 
   let html="";
 
