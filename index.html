@@ -995,11 +995,11 @@ function changeRegular(id,wd,field,value){
 /* -------------------------
    WER GEHT HEUTE?
 ------------------------- */
-let checkedGoing={};
+let checkedGoing=JSON.parse(localStorage.getItem("checkedGoing")||"{}");
 
 function toggleGoing(id){
 
-  checkedGoing[id]=!checkedGoing[id];
+  checkedGoing[id]=!checkedGoing[id];localStorage.setItem("checkedGoing",JSON.stringify(checkedGoing));
 
   renderGoing();
 
