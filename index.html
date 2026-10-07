@@ -275,35 +275,48 @@ background:#fff0e0;
 }
 
 @media print{
+
   body{
     background:white;
   }
 
-  .app-header{
+  .app-header,
   nav,
   .week-controls,
   #heute,
   #alle,
   #wochenplanung,
-  #wergeht,
-    .weekly-title{
+  #wergeht{
     display:none !important;
-}
+  }
+
+  #wochenuebersicht{
+    display:block !important;
+  }
+
+  .weekly-title{
+    display:block !important;
+    font-size:12px !important;
+    margin:0 0 2px 0 !important;
+  }
+
+  .weekly-subtitle{
+    display:block !important;
+    font-size:10px !important;
+    margin:0 0 5px 0 !important;
+  }
 
   .weekly-table{
-  font-size:8px;
-}
+    font-size:8px !important;
+    margin:0 !important;
+  }
 
-.weekly-table th,
-.weekly-table td{
-  padding:2px 2px;
-}
-  .weekly-table{
-  margin-top:0 !important;
-  margin-bottom:0 !important;
-}
-  
-    @page{
+  .weekly-table th,
+  .weekly-table td{
+    padding:2px !important;
+  }
+
+  @page{
     size:A4 portrait;
     margin:2mm;
   }
