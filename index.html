@@ -452,7 +452,7 @@ const times=[
   "16:00"
 ];
 
-const types=["","B","•","Pp","H","A"];
+const types=["","B","Pp","T","M","Abh","Anr","G","—"];
 
 const weekdayNames=[
   "Sonntag",
@@ -778,16 +778,17 @@ function renderDailyPlan(){
             </div>
 
             <div class="controls">
+<select
+  onchange="changeDailyPlan('${date}','${c.id}',this.value,null)">
+  ${options(times,plan.time)}
+</select>
 
-              <select
-                onchange="changeDailyPlan('${date}','${c.id}',this.value,null)">
-                ${options(times,plan.time)}
-              </select>
-
-              <select
-                onchange="changeDailyPlan('${date}','${c.id}',null,this.value)">
-                ${typeOptions(plan.type)}
-              </select>
+<input
+  type="time"
+  value="${plan.time && !times.includes(plan.time) ? plan.time : ""}"
+  onchange="changeDailyPlan('${date}','${c.id}',this.value,null)"
+  title="Eigene Uhrzeit eingeben">
+              
 
               ${
                 plan.exception
