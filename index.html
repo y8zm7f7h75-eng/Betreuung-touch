@@ -257,7 +257,11 @@ background:#fff0e0;
 .weekly-table .day-col{
   font-weight:700;
 }
-
+.day-holiday{
+  font-size:10px;
+  font-weight:700;
+  margin-top:3px;
+}
 .weekly-table .day-col span{
   font-weight:400;
   font-size:11px;
@@ -479,7 +483,57 @@ const weekdayNames=[
   "Freitag",
   "Samstag"
 ];
+/* -------------------------
+   FERIEN UND FEIERTAGE NRW
+------------------------- */
 
+const nrwFerien = [
+  {
+    von:"2026-10-17",
+    bis:"2026-10-31",
+    name:"Herbstferien"
+  },
+  {
+    von:"2026-12-23",
+    bis:"2027-01-06",
+    name:"Weihnachtsferien"
+  },
+  {
+    von:"2027-03-22",
+    bis:"2027-04-03",
+    name:"Osterferien"
+  },
+  {
+    von:"2027-05-18",
+    bis:"2027-05-18",
+    name:"Pfingstferien"
+  },
+  {
+    von:"2027-07-19",
+    bis:"2027-08-31",
+    name:"Sommerferien"
+  }
+];
+
+
+function getFerien(date){
+
+  return nrwFerien.find(f =>
+    date >= f.von && date <= f.bis
+  ) || null;
+
+}
+  const nrwFeiertage = {
+  "2027-05-06":"Christi Himmelfahrt",
+  "2027-05-17":"Pfingstmontag",
+  "2027-05-27":"Fronleichnam"
+};
+
+function getFeiertag(date){
+
+  return nrwFeiertage[date] || "";
+
+}
 /* -------------------------
    SPEICHER
 ------------------------- */
@@ -1451,6 +1505,17 @@ if(!picker.value) picker.value=todayString();
 
 days.forEach((day,i)=>{
 
+  const ferien=getFerien(day);
+  const feiertag=ferien ? "" : getFeiertag(day);
+
+  let hinweis="";
+
+  if(ferien){
+    hinweis=ferien.name;
+  }else if(feiertag){
+    hinweis=feiertag;
+  }
+
   html+=`
 
     <th colspan="2" class="day-col ${i>0 ? "day-start":""}">
@@ -1459,12 +1524,16 @@ days.forEach((day,i)=>{
 
       <span>${shortDate(day)}</span>
 
+      ${hinweis
+        ? `<div class="day-holiday">${hinweis}</div>`
+        : ""
+      }
+
     </th>
 
   `;
 
 });
-
 html+=`
 
         </tr>
@@ -1577,6 +1646,17 @@ html+=`
 
 days.forEach((day,i)=>{
 
+  const ferien=getFerien(day);
+  const feiertag=ferien ? "" : getFeiertag(day);
+
+  let hinweis="";
+
+  if(ferien){
+    hinweis=ferien.name;
+  }else if(feiertag){
+    hinweis=feiertag;
+  }
+
   html+=`
 
     <th colspan="2" class="day-col ${i>0 ? "day-start":""}">
@@ -1584,6 +1664,11 @@ days.forEach((day,i)=>{
       ${names[i]}<br>
 
       <span>${shortDate(day)}</span>
+
+      ${hinweis
+        ? `<div class="day-holiday">${hinweis}</div>`
+        : ""
+      }
 
     </th>
 
