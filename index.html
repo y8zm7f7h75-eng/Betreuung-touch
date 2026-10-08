@@ -662,6 +662,14 @@ function renderToday(){
             onclick="setDeparture('${c.id}')">
             ${a.gehen ? "Gehen "+a.gehen : "Gehen"}
           </button>
+          <input
+
+  type="time"
+
+  value="${a.gehen || ""}"
+
+  onchange="changeDeparture('${c.id}',this.value)"
+  title="Gehzeit eintragen oder korrigieren">
 
         </div>
       </div>
@@ -706,6 +714,24 @@ function setDeparture(id){
   save("attendance",attendance);
 
   renderToday();
+
+}
+
+
+function changeDeparture(id,time){
+
+  const date=todayString();
+
+  if(!attendance[date]) attendance[date]={};
+
+  attendance[date][id]=attendance[date][id] || {};
+
+  attendance[date][id].gehen=time;
+
+  save("attendance",attendance);
+
+  renderToday();
+
 }
 
 /* -------------------------
@@ -736,7 +762,6 @@ function renderAll(){
 
   document.getElementById("allList").innerHTML=html;
 }
-
 /* -------------------------
    DATUM
 ------------------------- */
