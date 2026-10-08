@@ -365,8 +365,9 @@ background:#fff0e0;
   <button id="tab-alle" onclick="showTab('alle')">Alle Kinder</button>
   <button id="tab-woche" onclick="showTab('woche')">Wochenplanung</button>
   <button id="tab-geht" onclick="showTab('geht')">Wer geht wann?</button>
-<button id="tab-wochenuebersicht" class="tab" onclick="showTab('wochenuebersicht')">Wochenübersicht</button></nav>
-
+<button id="tab-wochenuebersicht" class="tab" onclick="showTab('wochenuebersicht')">Wochenübersicht</button>
+<button id="tab-flex" class="tab" onclick="showTab('flex')">Flex-Kinder</button>
+</nav>
 <main>
 <section id="wochenuebersicht" class="view">
   <h2>Wochenübersicht</h2>
@@ -419,7 +420,10 @@ background:#fff0e0;
   <h2>Wer geht heute?</h2>
   <div id="goingList"></div>
 </section>
-
+<section id="flex" class="view" style="display:none">
+  <h2>Flex-Kinder</h2>
+  <div id="flexList"></div>
+</section>
 </main>
 
 <script>
@@ -447,7 +451,7 @@ classes.forEach(c=>{
     number++;
   }
 });
-
+const flexChildren=[];
 const times=[
   "",
   "11:00",
@@ -619,6 +623,7 @@ function showTab(tab){
   if(tab==="alle") renderAll();
   if(tab==="woche") renderDailyPlan();
   if(tab==="geht") renderGoing();
+  if(tab==="flex") renderFlex();
   if(tab==="wochenuebersicht"){const p=document.getElementById("weekPicker");if(p&&!p.value)p.value=todayString();renderWeeklyOverview()
   }
 }
@@ -1065,7 +1070,49 @@ function renderGoing(){
 
   document.getElementById("goingList").innerHTML=html;
 }
+function renderFlex(){
 
+  let html="";
+
+  children.forEach(c=>{
+
+    if(!flexChildren.includes(c.id)) return;
+
+    html+=`
+      <div class="going"
+        style="border-left:7px solid ${childColor(c)}">
+
+        <strong>${c.name}</strong>
+
+        <div>
+          0 von 50 Flex-Tagen genutzt
+        </div>
+
+        <div>
+          Noch 50 Tage verfügbar
+        </div>
+
+        <hr>
+
+        <div>
+          Noch keine Flex-Tage eingetragen.
+        </div>
+
+      </div>
+    `;
+  });
+
+  if(!html){
+
+    html=`
+      <div class="notice">
+        Noch keine Flex-Kinder festgelegt.
+      </div>
+    `;
+  }
+
+  document.getElementById("flexList").innerHTML=html;
+}
 /* -------------------------
    START
 ------------------------- */
