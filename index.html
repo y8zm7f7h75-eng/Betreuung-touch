@@ -1092,16 +1092,67 @@ renderProjects();
         </button>
 
       </div>
+      <div class="section">
 
+        <h4>Projekte</h4>
+
+        <div id="childProjects"></div>
+
+      </div>
       <div id="childNotes"></div>
 
     </div>
 
   `;
 
-  renderChildNotes(child.id);
+    renderChildNotes(child.id);
+    renderChildProjects(child.id);
 
 }
+ 
+  function renderChildProjects(id){
+
+  const box=document.getElementById("childProjects");
+
+  if(!box) return;
+
+  const projects=load("projects",[]);
+
+  if(!projects.length){
+
+    box.innerHTML=`
+      <p>Noch keine Projekte angelegt.</p>
+    `;
+
+    return;
+  }
+
+  let html="";
+
+  projects.forEach(project=>{
+
+    html+=`
+      <div class="child">
+
+        <strong>${project.name}</strong>
+
+        ${project.amount
+          ? `<div>Betrag: ${project.amount} €</div>`
+          : ""}
+
+        ${project.due
+          ? `<div>Fällig: ${shortDate(project.due)}</div>`
+          : ""}
+
+      </div>
+    `;
+
+  });
+
+  box.innerHTML=html;
+
+}
+  
   function addChildNote(id){
 
   const input=document.getElementById("childNoteInput");
