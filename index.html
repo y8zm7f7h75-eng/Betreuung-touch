@@ -1070,7 +1070,7 @@ function renderGoing(){
 
   document.getElementById("goingList").innerHTML=html;
 }
-function renderFlex(){
+  function renderFlex(){
 
   let html="";
 
@@ -1078,28 +1078,106 @@ function renderFlex(){
 
     if(!flexChildren.includes(c.id)) return;
 
-    html+=`
-      <div class="going"
-        style="border-left:7px solid ${childColor(c)}">
+    const days=[];
 
-        <strong>${c.name}</strong>
+    Object.keys(attendance).forEach(date=>{
 
-        <div>
-          0 von 50 Flex-Tagen genutzt
+      const a=attendance[date]?.[c.id];
+
+      if(!a || !a.gehen) return;
+
+      const time=a.gehen;
+
+      if(time > "13:10"){
+
+        days.push({
+          date:date,
+          time:time
+        });
+
+      }
+
+    });
+
+    days.sort((a,b)=>a.date.localeCompare(b.date));
+
+    const count=days.length;
+    const remaining=Math.max(0,50-count);
+
+    let warning="";
+
+    if(count>=50){
+
+      warning=`
+        <div class="notice">
+          🚨 50 von 50 Flex-Tagen genutzt – Kontingent erreicht.
         </div>
+      `;
 
-        <div>
-          Noch 50 Tage verfügbar
+    }else if(count>=45){
+
+      warning=`
+        <div class="notice">
+          ⚠️ Nur noch ${remaining} Flex-Tage verfügbar.
         </div>
+      `;
 
-        <hr>
+    }
 
-        <div>
+    let daysHtml="";
+
+    if(days.length){
+
+      daysHtml=`
+        <table>
+
+          <tr>
+            <th>Nr.</th>
+            <th>Datum</th>
+            <th>Gehzeit</th>
+          </tr>
+
+          ${days.map((d,i)=>`
+            <tr>
+              <td>${i+1}</td>
+              <td>${formatDate(d.date)}</td>
+              <td>${d.time}</td>
+            </tr>
+          `).join("")}
+
+        </table>
+      `;
+
+    }else{
+
+      daysHtml=`
+        <div class="notice">
           Noch keine Flex-Tage eingetragen.
         </div>
+      `;
+
+    }
+
+    html+=`
+      <div class="section">
+
+        <h3>${c.name}</h3>
+
+        <div>
+          <strong>${count} von 50 Flex-Tagen genutzt</strong>
+        </div>
+
+        <div>
+          Noch ${remaining} Tage verfügbar
+        </div>
+
+        ${warning}
+
+        ${daysHtml}
 
       </div>
     `;
+
   });
 
   if(!html){
@@ -1109,10 +1187,13 @@ function renderFlex(){
         Noch keine Flex-Kinder festgelegt.
       </div>
     `;
+
   }
 
   document.getElementById("flexList").innerHTML=html;
+
 }
+        
 /* -------------------------
    START
 ------------------------- */
