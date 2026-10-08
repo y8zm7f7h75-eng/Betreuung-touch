@@ -1153,12 +1153,21 @@ renderProjects();
           : ""}
 
         <label>
-          <input
-            type="checkbox"
-            ${checked}
-            onchange="toggleProjectParticipation('${id}','${project.id}')">
-          Nimmt teil
-        </label>
+  <input
+    type="checkbox"
+    ${checked}
+    onchange="toggleProjectParticipation('${id}','${project.id}')">
+  Nimmt teil
+</label>
+
+<br>
+
+<label>
+  <input
+    type="checkbox"
+    onchange="toggleProjectPaid('${id}','${project.id}')">
+  Bezahlt
+</label>
 
       </div>
     `;
@@ -1217,6 +1226,22 @@ function toggleProjectParticipation(childId,projectId){
 
 }
 
+  function toggleProjectPaid(childId,projectId){
+
+  const paid=load("projectPaid",{});
+
+  if(!paid[childId]){
+    paid[childId]={};
+  }
+
+  paid[childId][projectId]=
+    !paid[childId][projectId];
+
+  save("projectPaid",paid);
+
+  renderChildProjects(childId);
+}
+ 
   function renderChildNotes(id){
 
   const box=document.getElementById("childNotes");
