@@ -376,7 +376,8 @@ background:#fff0e0;
 <section id="wochenuebersicht" class="view">
   <h2>Wochenübersicht</h2>
 
-  <div class="week-controls">
+    <div class="week-controls">
+
     <label>
       Woche:
       <input
@@ -385,6 +386,32 @@ background:#fff0e0;
         onchange="renderWeeklyOverview()"
       >
     </label>
+
+    <br><br>
+
+    <label>
+      Tag schließen:
+      <input
+        type="date"
+        id="closedDate"
+      >
+    </label>
+
+    <input
+      type="text"
+      id="closedReason"
+      placeholder="Grund, z. B. Fortbildung"
+    >
+
+    <button
+      class="smallbtn"
+      onclick="closeDay(
+        document.getElementById('closedDate').value,
+        document.getElementById('closedReason').value
+      )">
+      Tag schließen
+    </button>
+
   </div>
 
   <div id="weeklyOverview"></div>
@@ -550,10 +577,21 @@ function load(key, fallback){
 function save(key,value){
   localStorage.setItem(key,JSON.stringify(value));
 }
+function closeDay(date,reason){
 
+  if(!date) return;
+
+  closedDays[date]=reason || "Schule geschlossen";
+
+  save("closedDays",closedDays);
+
+  renderWeeklyOverview();
+}
 let attendance=load("attendance",{});
 let dailyPlans=load("dailyPlans",{});
 let regularPlans=load("regularPlans",{});
+let closedDays=load("closedDays",{});
+
 
 /*
   Falls eine ältere Version bereits "actuals" benutzt hat,
@@ -1505,16 +1543,19 @@ if(!picker.value) picker.value=todayString();
 
 days.forEach((day,i)=>{
 
-  const ferien=getFerien(day);
-  const feiertag=ferien ? "" : getFeiertag(day);
+const ferien=getFerien(day);
+const feiertag=ferien ? "" : getFeiertag(day);
+const geschlossen=closedDays[day] || "";
 
-  let hinweis="";
+let hinweis="";
 
-  if(ferien){
-    hinweis=ferien.name;
-  }else if(feiertag){
-    hinweis=feiertag;
-  }
+if(geschlossen){
+  hinweis="🔒 " + geschlossen;
+}else if(ferien){
+  hinweis=ferien.name;
+}else if(feiertag){
+  hinweis=feiertag;
+}
 
   html+=`
 
@@ -1646,16 +1687,19 @@ html+=`
 
 days.forEach((day,i)=>{
 
-  const ferien=getFerien(day);
-  const feiertag=ferien ? "" : getFeiertag(day);
+const ferien=getFerien(day);
+const feiertag=ferien ? "" : getFeiertag(day);
+const geschlossen=closedDays[day] || "";
 
-  let hinweis="";
+let hinweis="";
 
-  if(ferien){
-    hinweis=ferien.name;
-  }else if(feiertag){
-    hinweis=feiertag;
-  }
+if(geschlossen){
+  hinweis="🔒 " + geschlossen;
+}else if(ferien){
+  hinweis=ferien.name;
+}else if(feiertag){
+  hinweis=feiertag;
+}
 
   html+=`
 
