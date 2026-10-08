@@ -184,6 +184,10 @@ background:#fff0e0;
   border-radius:9px;
   margin:5px 0;
 }
+  .going-time-separator{
+  border-top:2px solid #9aaeb6;
+  margin:12px 0;
+}
 .going-info{
 
   font-size:14px;
@@ -1286,28 +1290,39 @@ function renderGoing(){
   }
 
   let html="";
+let lastTime="";
 
-  list.forEach(x=>{
+list.forEach(x=>{
+
+  if(lastTime && lastTime !== x.time){
 
     html+=`
-      <div class="going"
-        style="border-left:7px solid ${childColor(x.child)}">
-
-        <div class="time">${x.time}</div>
-
-        <div>
-          <input
-            type="checkbox"
-            
-            onchange="toggleGoing('${x.child.id}')">
-         <strong>${x.child.name}</strong>
-       </div>
-
-        <div class="type">${x.type || ""}</div>
-        ${x.info ? `<div class="going-info">${x.info}</div>` : ""}
-      </div>
+      <div class="going-time-separator"></div>
     `;
-  });
+
+  }
+
+  html+=`
+    <div class="going"
+      style="border-left:7px solid ${childColor(x.child)}">
+
+      <div class="time">${x.time}</div>
+
+      <div>
+        <input
+          type="checkbox"
+          onchange="toggleGoing('${x.child.id}')">
+        <strong>${x.child.name}</strong>
+      </div>
+
+      <div class="type">${x.type || ""}</div>
+      ${x.info ? `<div class="going-info">${x.info}</div>` : ""}
+    </div>
+  `;
+
+  lastTime=x.time;
+
+});
 
   document.getElementById("goingList").innerHTML=html;
 }
