@@ -581,7 +581,26 @@ function closeDay(date,reason){
 
   if(!date) return;
 
+  if(!confirm("Soll dieser Tag wirklich geschlossen werden?")){
+    return;
+  }
+
   closedDays[date]=reason || "Schule geschlossen";
+
+  save("closedDays",closedDays);
+
+  renderWeeklyOverview();
+
+}
+  function reopenDay(date){
+
+  if(!date) return;
+
+  if(!confirm("Soll die Schließung dieses Tages wirklich aufgehoben werden?")){
+    return;
+  }
+
+  delete closedDays[date];
 
   save("closedDays",closedDays);
 
@@ -1550,11 +1569,25 @@ const geschlossen=closedDays[day] || "";
 let hinweis="";
 
 if(geschlossen){
-  hinweis="🔒 " + geschlossen;
+
+  hinweis=`
+    🔒 ${geschlossen}
+    <br>
+    <button
+      class="smallbtn"
+      onclick="reopenDay('${day}')">
+      Schließung aufheben
+    </button>
+  `;
+
 }else if(ferien){
+
   hinweis=ferien.name;
+
 }else if(feiertag){
+
   hinweis=feiertag;
+
 }
 
   html+=`
@@ -1694,11 +1727,25 @@ const geschlossen=closedDays[day] || "";
 let hinweis="";
 
 if(geschlossen){
-  hinweis="🔒 " + geschlossen;
+
+  hinweis=`
+    🔒 ${geschlossen}
+    <br>
+    <button
+      class="smallbtn"
+      onclick="reopenDay('${day}')">
+      Schließung aufheben
+    </button>
+  `;
+
 }else if(ferien){
+
   hinweis=ferien.name;
+
 }else if(feiertag){
+
   hinweis=feiertag;
+
 }
 
   html+=`
