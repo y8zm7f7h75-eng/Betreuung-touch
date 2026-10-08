@@ -469,7 +469,34 @@ background:#fff0e0;
   <div id="allList"></div>
 
   <div class="section">
+    <div class="section">
 
+      <h3>Projekte</h3>
+
+      <input
+        type="text"
+        id="newProjectName"
+        placeholder="Projekt, z. B. Herbstbasteln">
+
+      <input
+        type="number"
+        id="newProjectAmount"
+        placeholder="Betrag (optional)"
+        step="0.01">
+
+      <input
+        type="date"
+        id="newProjectDue">
+
+      <button
+        class="smallbtn"
+        onclick="addProject()">
+        Projekt anlegen
+      </button>
+
+      <div id="projectList"></div>
+
+    </div>
     <h3>Verwaltung / Notizen</h3>
 
     <label>Kind auswählen</label>
@@ -1023,7 +1050,7 @@ function renderAll(){
     });
 
   }
-
+renderProjects();
 }
   function selectChildManagement(id){
 
@@ -1135,6 +1162,81 @@ function renderAll(){
         <div>
           ${entry.text}
         </div>
+
+      </div>
+    `;
+
+  });
+
+  box.innerHTML=html;
+
+}
+  function addProject(){
+
+  const nameInput=document.getElementById("newProjectName");
+  const amountInput=document.getElementById("newProjectAmount");
+  const dueInput=document.getElementById("newProjectDue");
+
+  const name=nameInput.value.trim();
+
+  if(!name){
+
+    alert("Bitte einen Projektnamen eingeben.");
+
+    return;
+  }
+
+  const projects=load("projects",[]);
+
+  projects.push({
+    id:"project_"+Date.now(),
+    name:name,
+    amount:amountInput.value || "",
+    due:dueInput.value || ""
+  });
+
+  save("projects",projects);
+
+  nameInput.value="";
+  amountInput.value="";
+  dueInput.value="";
+
+  renderProjects();
+
+}
+  function renderProjects(){
+
+  const box=document.getElementById("projectList");
+
+  if(!box) return;
+
+  const projects=load("projects",[]);
+
+  if(!projects.length){
+
+    box.innerHTML=`
+      <p>Noch keine Projekte angelegt.</p>
+    `;
+
+    return;
+  }
+
+  let html="";
+
+  projects.forEach(project=>{
+
+    html+=`
+      <div class="section">
+
+        <strong>${project.name}</strong>
+
+        ${project.amount
+          ? `<div>Betrag: ${project.amount} €</div>`
+          : ""}
+
+        ${project.due
+          ? `<div>Fällig: ${shortDate(project.due)}</div>`
+          : ""}
 
       </div>
     `;
