@@ -1127,9 +1127,17 @@ renderProjects();
     return;
   }
 
+  const participation=load("projectParticipation",{});
+
+  if(!participation[id]){
+    participation[id]={};
+  }
+
   let html="";
 
   projects.forEach(project=>{
+
+    const checked=participation[id][project.id] ? "checked" : "";
 
     html+=`
       <div class="child">
@@ -1143,6 +1151,14 @@ renderProjects();
         ${project.due
           ? `<div>Fällig: ${shortDate(project.due)}</div>`
           : ""}
+
+        <label>
+          <input
+            type="checkbox"
+            ${checked}
+            onchange="toggleProjectParticipation('${id}','${project.id}')">
+          Nimmt teil
+        </label>
 
       </div>
     `;
@@ -1183,6 +1199,24 @@ renderProjects();
   renderChildNotes(id);
 
 }
+  
+function toggleProjectParticipation(childId,projectId){
+
+  const participation=load("projectParticipation",{});
+
+  if(!participation[childId]){
+    participation[childId]={};
+  }
+
+  participation[childId][projectId]=
+    !participation[childId][projectId];
+
+  save("projectParticipation",participation);
+  
+  renderChildProjects(childId);
+
+}
+
   function renderChildNotes(id){
 
   const box=document.getElementById("childNotes");
