@@ -1081,6 +1081,7 @@ function renderGoing(){
     const days=[];
 
     Object.keys(attendance).forEach(date=>{
+      if(date< "2026-09-01" || date > "2027-08-31") return;
 
       const a=attendance[date]?.[c.id];
 
@@ -1088,7 +1089,7 @@ function renderGoing(){
 
       const time=a.gehen;
 
-      if(time > "13:10"){
+      if(time > "13:20"){
 
         days.push({
           date:date,
