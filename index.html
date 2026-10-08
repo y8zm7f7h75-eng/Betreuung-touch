@@ -498,6 +498,14 @@ background:#fff0e0;
       <div id="projectList"></div>
 
     </div>
+    <h4>Offene Zahlungen</h4>
+
+<select id="openProjectSelect"
+        onchange="renderOpenProject()">
+  <option value="">Bitte Projekt auswählen</option>
+</select>
+
+<div id="openProjectList"></div>
     <h3>Verwaltung / Notizen</h3>
 
     <label>Kind auswählen</label>
@@ -1355,6 +1363,88 @@ function toggleProjectParticipation(childId,projectId){
           ? `<div>Fällig: ${shortDate(project.due)}</div>`
           : ""}
 
+      </div>
+    `;
+
+  });
+
+  box.innerHTML=html;
+    const select=document.getElementById("openProjectSelect");
+
+if(select){
+
+  const currentValue=select.value;
+  const projects=load("projects",[]);
+
+  select.innerHTML=
+    `<option value="">Bitte Projekt auswählen</option>`;
+
+  projects.forEach(project=>{
+
+    const option=document.createElement("option");
+    option.value=project.id;
+    option.textContent=project.name;
+
+    select.appendChild(option);
+
+  });
+
+  select.value=currentValue;
+}
+
+}
+  
+  function renderOpenProject(){
+
+  const select=document.getElementById("openProjectSelect");
+  const box=document.getElementById("openProjectList");
+
+  if(!select || !box) return;
+
+  const projectId=select.value;
+
+  if(!projectId){
+    box.innerHTML="";
+    return;
+  }
+
+  const projects=load("projects",[]);
+  const participation=load("projectParticipation",{});
+  const paid=load("projectPaid",{});
+
+  const project=projects.find(p=>p.id===projectId);
+
+  if(!project){
+    box.innerHTML="";
+    return;
+  }
+
+  const openChildren=children.filter(child =>
+    participation[child.id] &&
+    participation[child.id][projectId] &&
+    !(paid[child.id] && paid[child.id][projectId])
+  );
+
+  if(!openChildren.length){
+
+    box.innerHTML=`
+      <div class="notice">
+        Alle teilnehmenden Kinder haben bezahlt. 🎉
+      </div>
+    `;
+
+    return;
+  }
+
+  let html="";
+
+  openChildren.forEach(child=>{
+
+    html+=`
+      <div class="child"
+           style="border-left-color:${childColor(child)}">
+        <strong>${child.name}</strong>
+        <div>${child.className}</div>
       </div>
     `;
 
