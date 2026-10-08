@@ -1163,6 +1163,10 @@ function renderGoing(){
       <div class="section">
 
         <h3>${c.name}</h3>
+        <button class="smallbtn"
+        onclick="printFlex('${c.id}')">
+        Flex-Tage drucken
+        </button>
 
         <div>
           <strong>${count} von 50 Flex-Tagen genutzt</strong>
@@ -1194,7 +1198,149 @@ function renderGoing(){
   document.getElementById("flexList").innerHTML=html;
 
 }
-        
+function printFlex(id){
+
+  const child=children.find(c=>c.id===id);
+
+  if(!child) return;
+
+  const days=[];
+
+  Object.keys(attendance).forEach(date=>{
+
+    if(date < "2026-09-01" || date > "2027-08-31") return;
+
+    const a=attendance[date]?.[id];
+
+    if(!a || !a.gehen) return;
+
+    if(a.gehen > "13:20"){
+
+      days.push({
+        date:date,
+        time:a.gehen
+      });
+
+    }
+
+  });
+
+  days.sort((a,b)=>a.date.localeCompare(b.date));
+
+  const count=days.length;
+  const remaining=Math.max(0,50-count);
+
+  let rows="";
+
+  days.forEach((d,i)=>{
+
+    rows+=`
+      <tr>
+        <td>${i+1}</td>
+        <td>${formatDate(d.date)}</td>
+        <td>${d.time}</td>
+      </tr>
+    `;
+
+  });
+
+  const printWindow=window.open("","_blank");
+
+  printWindow.document.write(`
+    <!doctype html>
+    <html lang="de">
+    <head>
+
+      <meta charset="utf-8">
+
+      <title>Flex-Tage ${child.name}</title>
+
+      <style>
+
+        body{
+          font-family:Arial,sans-serif;
+          margin:30px;
+          color:#222;
+        }
+
+        h1{
+          margin-bottom:5px;
+        }
+
+        h2{
+          margin-top:0;
+          font-weight:normal;
+        }
+
+        .summary{
+          margin:20px 0;
+          font-size:18px;
+        }
+
+        table{
+          width:100%;
+          border-collapse:collapse;
+          margin-top:20px;
+        }
+
+        th,td{
+          border:1px solid #999;
+          padding:8px;
+          text-align:left;
+        }
+
+        th{
+          font-weight:bold;
+        }
+
+        .footer{
+          margin-top:30px;
+          font-size:12px;
+        }
+
+      </style>
+
+    </head>
+
+    <body>
+
+      <h1>Flex-Tage</h1>
+
+      <h2>${child.name}</h2>
+
+      <div class="summary">
+        <strong>Schuljahr 2026/2027</strong><br>
+        ${count} von 50 Flex-Tagen genutzt<br>
+        Noch ${remaining} Tage verfügbar
+      </div>
+
+      <table>
+
+        <tr>
+          <th>Nr.</th>
+          <th>Datum</th>
+          <th>Gehzeit</th>
+        </tr>
+
+        ${rows}
+
+      </table>
+
+      <div class="footer">
+        Flex-Tag zählt bei einer tatsächlichen Gehzeit nach 13:20 Uhr.
+      </div>
+
+    </body>
+    </html>
+  `);
+
+  printWindow.document.close();
+
+  printWindow.focus();
+
+  printWindow.print();
+
+}        
 /* -------------------------
    START
 ------------------------- */
