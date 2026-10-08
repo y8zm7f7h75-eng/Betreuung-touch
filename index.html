@@ -1128,17 +1128,22 @@ renderProjects();
   }
 
   const participation=load("projectParticipation",{});
+const paid=load("projectPaid",{});
 
-  if(!participation[id]){
-    participation[id]={};
-  }
+if(!participation[id]){
+  participation[id]={};
+}
 
-  let html="";
+if(!paid[id]){
+  paid[id]={};
+}
+
+let html="";
 
   projects.forEach(project=>{
 
     const checked=participation[id][project.id] ? "checked" : "";
-
+    const paidChecked=paid[id][project.id] ? "checked" : "";
     html+=`
       <div class="child">
 
@@ -1165,6 +1170,7 @@ renderProjects();
 <label>
   <input
     type="checkbox"
+    ${paidChecked}
     onchange="toggleProjectPaid('${id}','${project.id}')">
   Bezahlt
 </label>
