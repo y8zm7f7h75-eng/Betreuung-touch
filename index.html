@@ -463,8 +463,26 @@ background:#fff0e0;
 </section>
 
 <section id="alle" class="view" style="display:none">
+
   <h2>Alle Kinder</h2>
+
   <div id="allList"></div>
+
+  <div class="section">
+
+    <h3>Verwaltung / Notizen</h3>
+
+    <label>Kind auswählen</label>
+
+    <select id="childManagementSelect"
+            onchange="selectChildManagement(this.value)">
+      <option value="">Bitte Kind auswählen</option>
+    </select>
+
+    <div id="childManagement"></div>
+
+  </div>
+
 </section>
 
 <section id="woche" class="view" style="display:none">
@@ -508,6 +526,7 @@ const classes = [
   ["Klasse 3","gelb",12],
   ["Klasse 4","rot",16]
 ];
+let childClassOverrides=load("childClassOverrides",{});
 
 const children=[];
 let number=1;
@@ -517,7 +536,7 @@ classes.forEach(c=>{
     children.push({
       id:"kind"+number,
       name:"Kind "+number,
-      className:c[0],
+      className:childClassOverrides["kind"+number] || c[0],
       color:c[1]
     });
     number++;
@@ -981,6 +1000,149 @@ function renderAll(){
   });
 
   document.getElementById("allList").innerHTML=html;
+
+
+  /* Kinderauswahl für Verwaltung / Notizen */
+
+  const select=document.getElementById("childManagementSelect");
+
+  if(select){
+
+    select.innerHTML=
+      `<option value="">Bitte Kind auswählen</option>`;
+
+    children.forEach(c=>{
+
+      const option=document.createElement("option");
+
+      option.value=c.id;
+      option.textContent=c.name;
+
+      select.appendChild(option);
+
+    });
+
+  }
+
+}
+  function selectChildManagement(id){
+
+  const box=document.getElementById("childManagement");
+
+  if(!id){
+
+    box.innerHTML="";
+
+    return;
+  }
+
+  const child=children.find(c=>c.id===id);
+
+  if(!child) return;
+
+  box.innerHTML=`
+
+    <div class="section">
+
+      <h3>${child.name}</h3>
+
+      <p>
+        Klasse: <strong>${child.className}</strong>
+      </p>
+
+      <div class="controls">
+
+        <input
+          type="text"
+          id="childNoteInput"
+          placeholder="z. B. Projekt bezahlt">
+
+        <button
+          class="smallbtn"
+          onclick="addChildNote('${child.id}')">
+          Eintrag speichern
+        </button>
+
+      </div>
+
+      <div id="childNotes"></div>
+
+    </div>
+
+  `;
+
+  renderChildNotes(child.id);
+
+}
+  function addChildNote(id){
+
+  const input=document.getElementById("childNoteInput");
+
+  if(!input) return;
+
+  const text=input.value.trim();
+
+  if(!text) return;
+
+  const date=todayString();
+
+  const notes=load("childNotes",{});
+
+  if(!notes[id]){
+    notes[id]=[];
+  }
+
+  notes[id].push({
+    date:date,
+    text:text
+  });
+
+  save("childNotes",notes);
+
+  input.value="";
+
+  renderChildNotes(id);
+
+}
+  function renderChildNotes(id){
+
+  const box=document.getElementById("childNotes");
+
+  if(!box) return;
+
+  const notes=load("childNotes",{});
+
+  const list=notes[id] || [];
+
+  if(!list.length){
+
+    box.innerHTML=`
+      <p>Noch keine Einträge vorhanden.</p>
+    `;
+
+    return;
+  }
+
+  let html="";
+
+  list.slice().reverse().forEach((entry,index)=>{
+
+    html+=`
+      <div class="section">
+
+        <strong>${shortDate(entry.date)}</strong>
+
+        <div>
+          ${entry.text}
+        </div>
+
+      </div>
+    `;
+
+  });
+
+  box.innerHTML=html;
+
 }
 /* -------------------------
    DATUM
