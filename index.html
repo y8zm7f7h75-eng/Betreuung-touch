@@ -100,7 +100,17 @@ button{
   background:#dce5e9;
   font-size:15px;
 }
+.today-class-buttons{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:10px 0 14px;
+}
 
+.today-class-buttons .smallbtn.active-class{
+  background:#6b8e9e;
+  color:white;
+}
 .child{
   background:#fafafa;
   border-left:7px solid #ccc;
@@ -417,8 +427,35 @@ background:#fff0e0;
   <div id="weeklyOverview"></div>
 </section>
 <section id="heute" class="view">
+
   <h2>Heute - <span id="heuteDatum"></span></h2>
+
+  <div class="today-class-buttons">
+
+    <button class="smallbtn active-class"
+      onclick="showTodayClass(1)">
+      Klasse 1
+    </button>
+
+    <button class="smallbtn"
+      onclick="showTodayClass(2)">
+      Klasse 2
+    </button>
+
+    <button class="smallbtn"
+      onclick="showTodayClass(3)">
+      Klasse 3
+    </button>
+
+    <button class="smallbtn"
+      onclick="showTodayClass(4)">
+      Klasse 4
+    </button>
+
+  </div>
+
   <div id="todayList"></div>
+
 </section>
 
 <section id="alle" class="view" style="display:none">
@@ -741,53 +778,121 @@ function showTab(tab){
 /* -------------------------
    HEUTE
 ------------------------- */
+let todayClass=1;
 
-function renderToday(){
+function showTodayClass(classNumber){
+
+  todayClass=classNumber;
+
+  document.querySelectorAll(".today-class-buttons button").forEach((button,i)=>{
+
+    button.classList.toggle(
+      "active-class",
+      i+1===classNumber
+    );
+
+  });
+
+  renderToday(todayClass);
+
+}
+  function renderToday(classNumber=1){
 
   const date=todayString();
-  document.getElementById("heuteDatum").textContent = shortDate(date);
+
+  document.getElementById("heuteDatum").textContent =
+    shortDate(date);
 
   let html="";
 
-  children.forEach(c=>{
+  let selectedClasses=[];
 
-    const a=attendance[date]?.[c.id] || {};
+  if(classNumber===1){
+    selectedClasses=[
+      "Klasse 1 Affen",
+      "Klasse 1 Zebra"
+    ];
+  }
+
+  if(classNumber===2){
+    selectedClasses=[
+      "Klasse 2 Affen",
+      "Klasse 2 Zebra"
+    ];
+  }
+
+  if(classNumber===3){
+    selectedClasses=[
+      "Klasse 3"
+    ];
+  }
+
+  if(classNumber===4){
+    selectedClasses=[
+      "Klasse 4"
+    ];
+  }
+
+  selectedClasses.forEach(className=>{
 
     html+=`
-      <div class="child"
-           style="border-left-color:${childColor(c)}">
+      <div class="section">
 
-        <div class="childtitle">
-          ${c.name}
-          <span class="classname">${c.className}</span>
-        </div>
+        <h3>${className}</h3>
+    `;
 
-        <div class="controls">
+    children
+      .filter(c=>c.className===className)
+      .forEach(c=>{
 
-          <button class="smallbtn"
-            onclick="setArrival('${c.id}')">
-            ${a.ankommen ? "Ankommen "+a.ankommen : "Ankommen"}
-          </button>
+        const a=attendance[date]?.[c.id] || {};
 
-          <button class="smallbtn"
-            onclick="setDeparture('${c.id}')">
-            ${a.gehen ? "Gehen "+a.gehen : "Gehen"}
-          </button>
-          <input
+        html+=`
+          <div class="child"
+               style="border-left-color:${childColor(c)}">
 
-  type="time"
+            <div class="childtitle">
+              ${c.name}
+              <span class="classname">${c.className}</span>
+            </div>
 
-  value="${a.gehen || ""}"
+            <div class="controls">
 
-  onchange="changeDeparture('${c.id}',this.value)"
-  title="Gehzeit eintragen oder korrigieren">
+              <button class="smallbtn"
+                onclick="setArrival('${c.id}')">
+                ${a.ankommen
+                  ? "Ankommen "+a.ankommen
+                  : "Ankommen"}
+              </button>
 
-        </div>
+              <button class="smallbtn"
+                onclick="setDeparture('${c.id}')">
+                ${a.gehen
+                  ? "Gehen "+a.gehen
+                  : "Gehen"}
+              </button>
+
+              <input
+                type="time"
+                value="${a.gehen || ""}"
+                onchange="changeDeparture('${c.id}',this.value)"
+                title="Gehzeit eintragen oder korrigieren">
+
+            </div>
+
+          </div>
+        `;
+
+      });
+
+    html+=`
       </div>
     `;
+
   });
 
   document.getElementById("todayList").innerHTML=html;
+
 }
 
 function currentTime(){
@@ -809,7 +914,7 @@ function setArrival(id){
 
   save("attendance",attendance);
 
-  renderToday();
+  renderToday(todayClass);
 }
 
 function setDeparture(id){
@@ -824,7 +929,7 @@ function setDeparture(id){
 
   save("attendance",attendance);
 
-  renderToday();
+  renderToday(todayClass);
 
 }
 
@@ -841,7 +946,7 @@ function changeDeparture(id,time){
 
   save("attendance",attendance);
 
-  renderToday();
+  renderToday(todayClass);
 
 }
 
