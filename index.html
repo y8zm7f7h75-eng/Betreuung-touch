@@ -462,60 +462,191 @@ background:#fff0e0;
 
 </section>
 
+
+
 <section id="alle" class="view" style="display:none">
 
   <h2>Alle Kinder</h2>
 
-  <div id="allList"></div>
+  <div class="today-class-buttons">
 
-  <div class="section">
+    <button class="smallbtn active-class"
+
+      onclick="showChildSubTab('kind')">
+
+      Kind verwalten
+
+    </button>
+
+    <button class="smallbtn"
+
+      onclick="showChildSubTab('projekte')">
+
+      Projekte
+
+    </button>
+
+    <button class="smallbtn"
+
+      onclick="showChildSubTab('obstgeld')">
+
+      Obstgeld
+
+    </button>
+
+  </div>
+
+  <!-- UNTERREITER: KIND VERWALTEN -->
+
+  <div id="childSubKind">
+
     <div class="section">
 
-      <h3>Projekte</h3>
+      <h3>Kind auswählen</h3>
+
+      <select id="childManagementSelect"
+
+        onchange="selectChildManagement(this.value)">
+
+        <option value="">Bitte Kind auswählen</option>
+
+      </select>
+
+      <div id="childManagement"></div>
+
+    </div>
+
+    <div class="section">
+
+      <h3>Alle Kinder nach Klasse</h3>
+
+      <div id="allList"></div>
+
+    </div>
+
+  </div>
+
+  <!-- UNTERREITER: PROJEKTE -->
+
+  <div id="childSubProjekte" style="display:none">
+
+    <div class="section">
+
+      <h3>Projekt anlegen</h3>
 
       <input
+
         type="text"
+
         id="newProjectName"
+
         placeholder="Projekt, z. B. Herbstbasteln"
+
         style="pointer-events:auto;">
-    
+
       <input
+
         type="number"
+
         id="newProjectAmount"
+
         placeholder="Betrag (optional)"
+
         step="0.01">
 
       <input
+
         type="date"
+
         id="newProjectDue">
 
-      <button
-        class="smallbtn"
-        onclick="addProject()">
+      <button class="smallbtn" onclick="addProject()">
+
         Projekt anlegen
+
       </button>
 
       <div id="projectList"></div>
 
     </div>
-    <h4>Offene Zahlungen</h4>
 
-<select id="openProjectSelect"
+    <div class="section">
+
+      <h3>Offene Zahlungen</h3>
+
+      <select id="openProjectSelect"
+
         onchange="renderOpenProject()">
-  <option value="">Bitte Projekt auswählen</option>
-</select>
 
-<div id="openProjectList"></div>
-    <h3>Verwaltung / Notizen</h3>
+        <option value="">Bitte Projekt auswählen</option>
 
-    <label>Kind auswählen</label>
+      </select>
 
-    <select id="childManagementSelect"
-            onchange="selectChildManagement(this.value)">
-      <option value="">Bitte Kind auswählen</option>
-    </select>
+      <div id="openProjectList"></div>
 
-    <div id="childManagement"></div>
+    </div>
+
+  </div>
+
+  <!-- UNTERREITER: OBSTGELD -->
+
+  <div id="childSubObstgeld" style="display:none">
+
+    <div class="section">
+
+      <h3>Obstgeld pro Schuljahr</h3>
+
+      <label for="fruitSchoolYear">Schuljahr</label>
+
+      <select id="fruitSchoolYear"
+
+        onchange="renderFruitMoney()">
+
+        <option value="2026/27">2026/27</option>
+
+      </select>
+
+      <label for="fruitAmount">Betrag pro Kind in Euro</label>
+
+      <input
+
+        type="number"
+
+        id="fruitAmount"
+
+        min="0"
+
+        step="0.01"
+
+        value="20"
+
+        onchange="saveFruitAmount()">
+
+      <button class="smallbtn"
+
+        onclick="renderFruitMoney()">
+
+        Zahlungen anzeigen
+
+      </button>
+
+    </div>
+
+    <div class="section">
+
+      <h3>Offene Zahlungen</h3>
+
+      <div id="fruitOpenList"></div>
+
+    </div>
+
+    <div class="section">
+
+      <h3>Zahlungsübersicht</h3>
+
+      <div id="fruitPaidList"></div>
+
+    </div>
 
   </div>
 
@@ -827,13 +958,57 @@ function showTab(tab){
   renderWeeklyOverview();
 }
   if(tab==="heute") renderToday();
-  if(tab==="alle") renderAll();
+  
+if(tab==="alle"){
+  renderAll();
+  showChildSubTab("kind");
+}
+
   if(tab==="woche") renderDailyPlan();
   if(tab==="geht") renderGoing();
   if(tab==="flex") renderFlex();
   if(tab==="wochenuebersicht"){const p=document.getElementById("weekPicker");if(p&&!p.value)p.value=todayString();renderWeeklyOverview()
   }
 }
+  
+function showChildSubTab(tab){
+
+  document.getElementById("childSubKind").style.display =
+    tab === "kind" ? "block" : "none";
+
+  document.getElementById("childSubProjekte").style.display =
+    tab === "projekte" ? "block" : "none";
+
+  document.getElementById("childSubObstgeld").style.display =
+    tab === "obstgeld" ? "block" : "none";
+
+  const buttons = document.querySelectorAll(
+    '#alle .today-class-buttons button'
+  );
+
+  buttons.forEach(button => {
+    button.classList.remove("active-class");
+  });
+
+  const buttonIndex = {
+    kind: 0,
+    projekte: 1,
+    obstgeld: 2
+  }[tab];
+
+  if(buttons[buttonIndex]){
+    buttons[buttonIndex].classList.add("active-class");
+  }
+
+  if(tab === "projekte"){
+    renderProjects();
+  }
+
+  if(tab === "obstgeld"){
+    renderFruitMoney();
+  }
+}
+
 /* -------------------------
    HEUTE
 ------------------------- */
