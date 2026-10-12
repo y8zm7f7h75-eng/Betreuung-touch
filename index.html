@@ -1679,19 +1679,24 @@ function renderChildNotes(id){
 
 }
   function copyChildNote(id,index){
-
   const notes = load("childNotes",{});
   const entry = notes[id] && notes[id][index];
-
   if(!entry){
     alert("Eintrag nicht gefunden.");
     return;
   }
-
   const text = shortDate(entry.date) + "\n" + entry.text;
-
-  window.prompt("Eintrag zum Kopieren markieren:",text);
-
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text)
+      .then(()=>{
+        alert("Eintrag kopiert. Du kannst ihn jetzt beim anderen Kind einfügen.");
+      })
+      .catch(()=>{
+        window.prompt("Bitte Text markieren und kopieren:",text);
+      });
+  } else {
+    window.prompt("Bitte Text markieren und kopieren:",text);
+  }
 }
 
 
