@@ -2609,8 +2609,12 @@ list.forEach(x=>{
       <div class="time">${x.time}</div>
 
       <div>
-        <input
+                <input
+
           type="checkbox"
+
+          ${checkedGoing[x.child.id] ? "checked" : ""}
+
           onchange="toggleGoing('${x.child.id}')">
         <strong>${x.child.name}</strong>
       </div>
