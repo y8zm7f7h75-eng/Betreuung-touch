@@ -493,6 +493,9 @@ background:#fff0e0;
       Obstgeld
 
     </button>
+    <button class="smallbtn" 
+      onclick="showChildSubTab('klassenlisten')
+      ">Klassenlisten</button>
 
   </div>
 
@@ -516,17 +519,8 @@ background:#fff0e0;
 
     </div>
 
-    <div class="section">
-
-      <h3>Alle Kinder nach Klasse</h3>
-
-      <div id="allList"></div>
-
-    </div>
-
   </div>
-
-  <!-- UNTERREITER: PROJEKTE -->
+<!-- UNTERREITER: PROJEKTE -->
 
   <div id="childSubProjekte" style="display:none">
 
@@ -649,7 +643,62 @@ background:#fff0e0;
     </div>
 
   </div>
+    <!-- UNTERREITER: KLASSENLISTEN -->
+  <div id="childSubKlassenlisten" style="display:none">
+<div class="section">
+  <h3>Eigene Klassenlisten</h3>
 
+  <label for="classListName">Name der Liste</label>
+  <input type="text" id="classListName"
+    placeholder="z. B. Bastelprojekt">
+
+  <label for="classListClass">Klasse auswählen</label>
+  <select id="classListClass">
+    <option value="all">Alle Kinder</option>
+    <option value="Klasse 1 Affen">Klasse 1 Affen</option>
+    <option value="Klasse 1 Zebra">Klasse 1 Zebra</option>
+    <option value="Klasse 2 Affen">Klasse 2 Affen</option>
+    <option value="Klasse 2 Zebra">Klasse 2 Zebra</option>
+    <option value="Klasse 3">Klasse 3</option>
+    <option value="Klasse 4">Klasse 4</option>
+  </select>
+
+  <p>Die drei Spalten kannst du selbst benennen:</p>
+
+  <label for="classListHeading1">Spalte 1</label>
+  <input type="text" id="classListHeading1"
+    placeholder="z. B. Begonnen">
+
+  <label for="classListHeading2">Spalte 2</label>
+  <input type="text" id="classListHeading2"
+    placeholder="z. B. Fertig">
+
+  <label for="classListHeading3">Spalte 3</label>
+  <input type="text" id="classListHeading3"
+    placeholder="z. B. Mitgenommen">
+
+  <button class="smallbtn"
+    onclick="createClassList()">
+    Liste erstellen
+  </button>
+
+</div>
+<div class="section">
+
+  <h3>Liste bearbeiten</h3>
+
+  <div id="classListArea"></div>
+
+</div>
+    
+<div class="section">
+
+  <h3>Alle Kinder nach Klasse</h3>
+
+  <div id="allList"></div>
+
+</div>
+  </div>
 </section>
 
 <section id="woche" class="view" style="display:none">
@@ -971,6 +1020,7 @@ if(tab==="alle"){
   }
 }
   
+
 function showChildSubTab(tab){
 
   document.getElementById("childSubKind").style.display =
@@ -981,6 +1031,9 @@ function showChildSubTab(tab){
 
   document.getElementById("childSubObstgeld").style.display =
     tab === "obstgeld" ? "block" : "none";
+
+  document.getElementById("childSubKlassenlisten").style.display =
+    tab === "klassenlisten" ? "block" : "none";
 
   const buttons = document.querySelectorAll(
     '#alle .today-class-buttons button'
@@ -993,7 +1046,8 @@ function showChildSubTab(tab){
   const buttonIndex = {
     kind: 0,
     projekte: 1,
-    obstgeld: 2
+    obstgeld: 2,
+    klassenlisten: 3
   }[tab];
 
   if(buttons[buttonIndex]){
@@ -1006,6 +1060,10 @@ function showChildSubTab(tab){
 
   if(tab === "obstgeld"){
     renderFruitMoney();
+  }
+
+  if(tab === "klassenlisten"){
+    renderClassLists();
   }
 }
 
@@ -1210,7 +1268,8 @@ function renderAll(){
     html+="</div>";
   });
 
-  document.getElementById("allList").innerHTML=html;
+  const allList = document.getElementById("allList");
+if(allList) allList.innerHTML = html;
 
 
   /* Kinderauswahl für Verwaltung / Notizen */
@@ -1724,6 +1783,265 @@ function renderFruitMoney(){
     (paidHtml || "<p>Noch keine Zahlungen erfasst.</p>");
 
 }
+
+/* -------------------------
+   KLASSENLISTEN
+------------------------- */
+
+function createClassList(){
+
+  const name = document.getElementById("classListName").value.trim();
+  const className = document.getElementById("classListClass").value;
+
+  const headings = [
+    document.getElementById("classListHeading1").value.trim() || "Spalte 1",
+    document.getElementById("classListHeading2").value.trim() || "Spalte 2",
+    document.getElementById("classListHeading3").value.trim() || "Spalte 3"
+  ];
+
+  if(!name){
+    alert("Bitte gib der Liste einen Namen.");
+    return;
+  }
+
+  const lists = load("customClassLists", []);
+  const id = "liste_" + Date.now();
+
+  lists.push({
+    id: id,
+    name: name,
+    className: className,
+    headings: headings,
+    entries: {}
+  });
+
+  save("customClassLists", lists);
+
+  document.getElementById("classListName").value = "";
+  renderClassLists();
+}
+
+function renderClassLists(){
+
+  const area = document.getElementById("classListArea");
+  if(!area) return;
+
+  const lists = load("customClassLists", []);
+
+  if(lists.length === 0){
+    area.innerHTML = "<p>Noch keine Klassenliste erstellt.</p>";
+    return;
+  }
+
+  let html = "";
+
+  lists.forEach(list => {
+
+    const listChildren = children.filter(child =>
+      list.className === "all" ||
+      child.className === list.className
+    );
+
+    html += `
+      <div class="section">
+        <h3>${escapeClassListText(list.name)}</h3>
+        <p>${escapeClassListText(list.className === "all" ? "Alle Kinder" : list.className)}</p>
+
+        <div style="overflow-x:auto">
+          <table>
+            <thead>
+              <tr>
+                <th>Kind</th>
+                ${list.headings.map((heading,index) =>
+                  `<th>${escapeClassListText(heading)}</th>`
+                ).join("")}
+              </tr>
+            </thead>
+            <tbody>
+              ${listChildren.map(child => {
+
+                const entry = list.entries[child.id] || [
+                  {checked:false,text:""},
+                  {checked:false,text:""},
+                  {checked:false,text:""}
+                ];
+
+                return `
+                  <tr>
+                    <td>${escapeClassListText(child.name)}</td>
+                    ${entry.map((item,index) => `
+                      <td>
+                        <label>
+                          <input type="checkbox"
+                            ${item.checked ? "checked" : ""}
+                            onchange="updateClassListEntry('${list.id}','${child.id}',${index},'checked',this.checked)">
+                        </label>
+                        <input type="text"
+                          value="${escapeClassListText(item.text)}"
+                          placeholder="Eintrag"
+                          onchange="updateClassListEntry('${list.id}','${child.id}',${index},'text',this.value)">
+                      </td>
+                    `).join("")}
+                  </tr>
+                `;
+              }).join("")}
+            </tbody>
+          </table>
+        </div>
+
+        <button class="smallbtn"
+          onclick="printClassList('${list.id}')">
+          Diese Liste drucken
+        </button>
+
+        <button class="smallbtn"
+          onclick="deleteClassList('${list.id}')">
+          Liste löschen
+        </button>
+      </div>
+    `;
+  });
+
+  area.innerHTML = html;
+}
+
+function updateClassListEntry(listId, childId, index, field, value){
+
+  const lists = load("customClassLists", []);
+  const list = lists.find(item => item.id === listId);
+
+  if(!list) return;
+
+  if(!list.entries[childId]){
+    list.entries[childId] = [
+      {checked:false,text:""},
+      {checked:false,text:""},
+      {checked:false,text:""}
+    ];
+  }
+
+  list.entries[childId][index][field] = value;
+
+  save("customClassLists", lists);
+}
+
+function deleteClassList(listId){
+
+  if(!confirm("Möchtest du diese Liste wirklich löschen?")) return;
+
+  const lists = load("customClassLists", [])
+    .filter(list => list.id !== listId);
+
+  save("customClassLists", lists);
+  renderClassLists();
+}
+
+function escapeClassListText(value){
+
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+  
+function printClassList(listId){
+
+  const lists = load("customClassLists", []);
+  const list = lists.find(item => item.id === listId);
+
+  if(!list) return;
+
+  const listChildren = children.filter(child =>
+    list.className === "all" ||
+    child.className === list.className
+  );
+
+  const rows = listChildren.map(child => {
+
+    const entry = list.entries[child.id] || [
+      {checked:false,text:""},
+      {checked:false,text:""},
+      {checked:false,text:""}
+    ];
+
+    return `
+      <tr>
+        <td>${escapeClassListText(child.name)}</td>
+        ${entry.map(item => `
+          <td>
+            ${item.checked ? "☒" : "☐"}
+            ${escapeClassListText(item.text)}
+          </td>
+        `).join("")}
+      </tr>
+    `;
+  }).join("");
+
+  const printWindow = window.open("", "_blank");
+
+  if(!printWindow){
+    alert("Bitte erlaube das Öffnen des Druckfensters.");
+    return;
+  }
+
+  printWindow.document.write(`
+    <!doctype html>
+    <html lang="de">
+    <head>
+      <meta charset="utf-8">
+      <title>${escapeClassListText(list.name)}</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          padding: 15px;
+        }
+        h1 {
+          font-size: 20px;
+        }
+        table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+        th, td {
+          border: 1px solid #777;
+          padding: 6px;
+          text-align: left;
+          vertical-align: top;
+        }
+        th {
+          background: #eee;
+        }
+        @media print {
+          body { padding: 0; }
+          tr { break-inside: avoid; }
+        }
+      </style>
+    </head>
+    <body>
+      <h1>${escapeClassListText(list.name)}</h1>
+      <p>${escapeClassListText(list.className === "all" ? "Alle Kinder" : list.className)}</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Kind</th>
+            ${list.headings.map(heading =>
+              `<th>${escapeClassListText(heading)}</th>`
+            ).join("")}
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </body>
+    </html>
+  `);
+
+  printWindow.document.close();
+  printWindow.focus();
+  printWindow.print();
+}
+
 
 /* -------------------------
    DATUM
