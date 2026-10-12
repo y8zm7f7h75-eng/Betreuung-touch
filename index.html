@@ -1937,19 +1937,55 @@ function renderProjectArchive(){
   archived.forEach(project => {
 
     projectHtml += `
+      
       <div class="section">
         <strong>${project.name}</strong>
+
         ${project.amount
           ? `<div>Betrag pro Kind: ${project.amount} €</div>`
           : ""}
+
         ${project.due
           ? `<div>Fällig: ${shortDate(project.due)}</div>`
           : ""}
+
+        <div style="margin-top:10px">
+          <strong>Teilnehmende Kinder:</strong>
+        </div>
+
+        ${(() => {
+          const participants = children.filter(child =>
+            participation[child.id] &&
+            participation[child.id][project.id]
+          );
+
+          if(!participants.length){
+            return "<div>Keine Teilnehmenden eingetragen.</div>";
+          }
+
+          return participants.map(child => {
+            const hasPaid =
+              paid[child.id] &&
+              paid[child.id][project.id];
+
+            return `
+              <div style="margin-top:5px; padding:5px; border-bottom:1px solid #ddd">
+                <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${childColor(child)};margin-right:6px"></span>
+                ${child.name} – ${child.className}
+                <strong style="margin-left:6px">
+                  ${hasPaid ? "Bezahlt" : "Noch offen"}
+                </strong>
+              </div>
+            `;
+          }).join("");
+        })()}
+
         <button class="smallbtn"
           onclick="restoreProject('${project.id}')">
           Zurück zu laufenden Projekten
         </button>
       </div>
+
     `;
 
     children.forEach(child => {
