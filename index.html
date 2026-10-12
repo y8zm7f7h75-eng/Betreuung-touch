@@ -1678,6 +1678,43 @@ function renderChildNotes(id){
   box.innerHTML=html;
 
 }
+  function copyChildNote(id,index){
+
+  const notes = load("childNotes",{});
+  const entry = notes[id] && notes[id][index];
+
+  if(!entry){
+    alert("Eintrag nicht gefunden.");
+    return;
+  }
+
+  const text = shortDate(entry.date) + "\n" + entry.text;
+
+  window.prompt("Eintrag zum Kopieren markieren:",text);
+
+}
+
+
+function deleteChildNote(id,index){
+
+  const notes = load("childNotes",{});
+
+  if(!notes[id] || !notes[id][index]){
+    alert("Eintrag nicht gefunden.");
+    return;
+  }
+
+  if(!confirm("Möchtest du diesen Eintrag wirklich löschen?")){
+    return;
+  }
+
+  notes[id].splice(index,1);
+
+  save("childNotes",notes);
+
+  renderChildNotes(id);
+
+}
   function addProject(){
 
   const nameInput=document.getElementById("newProjectName");
