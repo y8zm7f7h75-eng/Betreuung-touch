@@ -1466,7 +1466,7 @@ renderProjects();
 
 }
  
-  function renderChildProjects(id){
+ function renderChildProjects(id){
 
   const box=document.getElementById("childProjects");
 
@@ -1476,27 +1476,25 @@ renderProjects();
   const participation=load("projectParticipation",{});
   const paid=load("projectPaid",{});
 
-  const childProjects=projects.filter(project =>
-    participation[id] &&
-    participation[id][project.id]
-  );
-
-  if(!childProjects.length){
-
-    box.innerHTML=`
-      <p>Dieses Kind nimmt an keinen Projekten teil.</p>
-    `;
-
+  if(!projects.length){
+    box.innerHTML="<p>Noch keine Projekte angelegt.</p>";
     return;
   }
 
   let html="";
 
-  childProjects.forEach(project=>{
+  projects.forEach(project=>{
 
-    const paidChecked=paid[id] && paid[id][project.id]
-      ? "checked"
-      : "";
+    const checked=
+      participation[id] &&
+      participation[id][project.id]
+        ? "checked"
+        : "";
+
+    const paidChecked=
+      paid[id] && paid[id][project.id]
+        ? "checked"
+        : "";
 
     html+=`
       <div class="child">
@@ -1514,20 +1512,21 @@ renderProjects();
         <label>
           <input
             type="checkbox"
-            checked
+            ${checked}
             onchange="toggleProjectParticipation('${id}','${project.id}')">
           Nimmt teil
         </label>
 
-        <br>
-
-        <label>
-          <input
-            type="checkbox"
-            ${paidChecked}
-            onchange="toggleProjectPaid('${id}','${project.id}')">
-          Bezahlt
-        </label>
+        ${checked ? `
+          <br>
+          <label>
+            <input
+              type="checkbox"
+              ${paidChecked}
+              onchange="toggleProjectPaid('${id}','${project.id}')">
+            Bezahlt
+          </label>
+        ` : ""}
 
       </div>
     `;
@@ -1536,8 +1535,7 @@ renderProjects();
 
   box.innerHTML=html;
 
-}
-  
+} 
   function addChildNote(id){
 
   const input=document.getElementById("childNoteInput");
