@@ -485,6 +485,15 @@ background:#fff0e0;
       Projekte
 
     </button>
+    
+
+<button class="smallbtn"
+
+  onclick="showChildSubTab('projektarchiv')">
+
+  Projektarchiv
+
+</button>
 
     <button class="smallbtn"
 
@@ -581,6 +590,29 @@ background:#fff0e0;
     </div>
 
   </div>
+  
+
+<!-- UNTERREITER: PROJEKTARCHIV -->
+
+<div id="childSubProjektarchiv" style="display:none">
+
+  <div class="section">
+
+    <h3>Abgeschlossene Projekte</h3>
+
+    <div id="archivedProjectList"></div>
+
+  </div>
+
+  <div class="section">
+
+    <h3>Offene Beträge aus archivierten Projekten</h3>
+
+    <div id="archivedOpenPayments"></div>
+
+  </div>
+
+</div>
 
   <!-- UNTERREITER: OBSTGELD -->
 
@@ -1021,6 +1053,7 @@ if(tab==="alle"){
 }
   
 
+
 function showChildSubTab(tab){
 
   document.getElementById("childSubKind").style.display =
@@ -1028,6 +1061,9 @@ function showChildSubTab(tab){
 
   document.getElementById("childSubProjekte").style.display =
     tab === "projekte" ? "block" : "none";
+
+  document.getElementById("childSubProjektarchiv").style.display =
+    tab === "projektarchiv" ? "block" : "none";
 
   document.getElementById("childSubObstgeld").style.display =
     tab === "obstgeld" ? "block" : "none";
@@ -1046,8 +1082,9 @@ function showChildSubTab(tab){
   const buttonIndex = {
     kind: 0,
     projekte: 1,
-    obstgeld: 2,
-    klassenlisten: 3
+    projektarchiv: 2,
+    obstgeld: 3,
+    klassenlisten: 4
   }[tab];
 
   if(buttons[buttonIndex]){
@@ -1057,6 +1094,9 @@ function showChildSubTab(tab){
   if(tab === "projekte"){
     renderProjects();
   }
+  if(tab === "projektarchiv"){
+  renderProjectArchive();
+}
 
   if(tab === "obstgeld"){
     renderFruitMoney();
@@ -1593,11 +1633,18 @@ function toggleProjectParticipation(childId,projectId){
           ? `<div>Betrag: ${project.amount} €</div>`
           : ""}
 
+        
         ${project.due
           ? `<div>Fällig: ${shortDate(project.due)}</div>`
           : ""}
 
+        <button class="smallbtn"
+          onclick="archiveProject('${project.id}')">
+          Abschließen und archivieren
+        </button>
+
       </div>
+
     `;
 
   });
@@ -1688,6 +1735,193 @@ if(select){
 
 }
   
+function archiveProject(projectId){
+
+  if(!confirm("Projekt abschließen und archivieren?")){
+    return;
+  }
+
+  const projects = load("projects", []);
+  const project = projects.find(p => p.id === projectId);
+
+  if(!project) return;
+
+  const archived = load("archivedProjects", []);
+
+  if(archived.some(p => p.id === projectId)){
+    alert("Dieses Projekt ist bereits archiviert.");
+    return;
+  }
+
+  archived.push(project);
+
+  save("archivedProjects", archived);
+  save("projects", projects.filter(p => p.id !== projectId));
+
+  renderProjects();
+  renderProjectArchive();
+}
+
+function renderProjectArchive(){
+
+  const listBox = document.getElementById("archivedProjectList");
+  const openBox = document.getElementById("archivedOpenPayments");
+
+  if(!listBox || !openBox) return;
+
+  const archived = load("archivedProjects", []);
+  const participation = load("projectParticipation", {});
+  const paid = load("projectPaid", {});
+
+  if(!archived.length){
+    listBox.innerHTML = "<p>Noch keine Projekte archiviert.</p>";
+    openBox.innerHTML = "<p>Keine offenen Beträge.</p>";
+    return;
+  }
+
+  let projectHtml = "";
+  let openHtml = "";
+  let totalOpen = 0;
+  let openCount = 0;
+
+  archived.forEach(project => {
+
+    projectHtml += `
+      <div class="section">
+        <strong>${project.name}</strong>
+        ${project.amount
+          ? `<div>Betrag pro Kind: ${project.amount} €</div>`
+          : ""}
+        ${project.due
+          ? `<div>Fällig: ${shortDate(project.due)}</div>`
+          : ""}
+        <button class="smallbtn"
+          onclick="restoreProject('${project.id}')">
+          Zurück zu laufenden Projekten
+        </button>
+      </div>
+    `;
+
+    children.forEach(child => {
+
+      const tookPart =
+        participation[child.id] &&
+        participation[child.id][project.id];
+
+      const hasPaid =
+        paid[child.id] &&
+        paid[child.id][project.id];
+
+      if(tookPart && !hasPaid){
+
+        const amount = Number(project.amount) || 0;
+        totalOpen += amount;
+        openCount++;
+
+        openHtml += `
+          <div class="child"
+            style="border-left-color:${childColor(child)}">
+            <strong>${child.name}</strong>
+            <div>${child.className}</div>
+            <div>Projekt: ${project.name}</div>
+            <div>Offen: ${amount.toFixed(2).replace(".", ",")} €</div>
+          </div>
+        `;
+      }
+    });
+  });
+
+  listBox.innerHTML = projectHtml;
+
+  openBox.innerHTML = openCount
+    ? openHtml + `
+        <div class="section">
+          <strong>${openCount} offene Zahlung(en)</strong>
+          <div>Gesamt offen: ${totalOpen.toFixed(2).replace(".", ",")} €</div>
+        </div>
+        <button class="smallbtn" onclick="printArchivedOpenPayments()">
+          Offene Beträge drucken
+        </button>
+      `
+    : "<p>Keine offenen Beträge. Alle teilnehmenden Kinder haben bezahlt.</p>";
+}
+
+function restoreProject(projectId){
+
+  if(!confirm("Projekt wieder zu den laufenden Projekten verschieben?")){
+    return;
+  }
+
+  const archived = load("archivedProjects", []);
+  const project = archived.find(p => p.id === projectId);
+
+  if(!project) return;
+
+  const projects = load("projects", []);
+
+  projects.push(project);
+
+  save("projects", projects);
+  save("archivedProjects", archived.filter(p => p.id !== projectId));
+
+  renderProjects();
+  renderProjectArchive();
+}
+
+function printArchivedOpenPayments(){
+
+  const box = document.getElementById("archivedOpenPayments");
+
+  if(!box) return;
+
+  const printWindow = window.open("", "_blank");
+
+  if(!printWindow){
+    alert("Bitte erlaube das Öffnen des Druckfensters.");
+    return;
+  }
+
+  printWindow.document.write(`
+    <!doctype html>
+    <html lang="de">
+    <head>
+      <meta charset="utf-8">
+      <title>Offene Projektzahlungen</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          padding: 20px;
+        }
+        h1 {
+          font-size: 20px;
+        }
+        .child, .section {
+          border: 1px solid #ccc;
+          padding: 8px;
+          margin-bottom: 8px;
+          break-inside: avoid;
+        }
+        button {
+          display: none;
+        }
+        @media print {
+          body { padding: 0; }
+        }
+      </style>
+    </head>
+    <body>
+      <h1>Offene Beträge aus archivierten Projekten</h1>
+      ${box.innerHTML}
+    </body>
+    </html>
+  `);
+
+  printWindow.document.close();
+  printWindow.focus();
+  printWindow.print();
+  printWindow.close();
+}
+
 /* -------------------------
    OBSTGELD
 ------------------------- */
