@@ -1270,6 +1270,14 @@ function changeArrival(id,time){
 
   const date=todayString();
 
+  const a=attendance[date]?.[id] || {};
+
+  if(time && a.gehen && time > a.gehen){
+    alert("Die Ankommenszeit darf nicht nach der Gehzeit liegen.");
+    renderToday(todayClass);
+    return;
+  }
+
   if(!attendance[date]) attendance[date]={};
 
   attendance[date][id]=attendance[date][id] || {};
