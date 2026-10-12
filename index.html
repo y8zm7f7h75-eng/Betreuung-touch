@@ -1579,11 +1579,42 @@ function toggleProjectParticipation(childId,projectId){
     participation[childId]={};
   }
 
-  participation[childId][projectId]=
-    !participation[childId][projectId];
+  if(participation[childId][projectId]){
 
-  save("projectParticipation",participation);
-  
+    const project=load("projects",[])
+      .find(p=>p.id===projectId);
+
+    const projectName=project
+      ? project.name
+      : "dieses Projekt";
+
+    if(!confirm(
+      "Möchtest du die Teilnahme an „"+
+      projectName+
+      "“ für dieses Kind wirklich beenden?"
+    )){
+      return;
+    }
+
+    delete participation[childId][projectId];
+
+    save("projectParticipation",participation);
+
+    const paid=load("projectPaid",{});
+
+    if(paid[childId]){
+      delete paid[childId][projectId];
+      save("projectPaid",paid);
+    }
+
+  }else{
+
+    participation[childId][projectId]=true;
+
+    save("projectParticipation",participation);
+
+  }
+
   renderChildProjects(childId);
 
 }
