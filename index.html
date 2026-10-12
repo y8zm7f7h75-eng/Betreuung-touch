@@ -1190,12 +1190,29 @@ function showTodayClass(classNumber){
 
             <div class="controls">
 
-              <button class="smallbtn"
-                onclick="setArrival('${c.id}')">
-                ${a.ankommen
-                  ? "Ankommen "+a.ankommen
-                  : "Ankommen"}
-              </button>
+              
+
+<button class="smallbtn"
+
+  onclick="setArrival('${c.id}')">
+
+  ${a.ankommen
+
+    ? "Ankommen "+a.ankommen
+
+    : "Ankommen"}
+
+</button>
+
+<input
+
+  type="time"
+
+  value="${a.ankommen || ""}"
+
+  onchange="changeArrival('${c.id}',this.value)"
+
+  title="Ankunftszeit manuell eintragen oder korrigieren">
 
               <button class="smallbtn"
                 onclick="setDeparture('${c.id}')">
@@ -1248,6 +1265,22 @@ function setArrival(id){
 
   renderToday(todayClass);
 }
+  
+function changeArrival(id,time){
+
+  const date=todayString();
+
+  if(!attendance[date]) attendance[date]={};
+
+  attendance[date][id]=attendance[date][id] || {};
+
+  attendance[date][id].ankommen=time;
+
+  save("attendance",attendance);
+
+  renderToday(todayClass);
+}
+
 
 function setDeparture(id){
 
