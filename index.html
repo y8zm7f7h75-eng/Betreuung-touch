@@ -1631,22 +1631,17 @@ function toggleProjectParticipation(childId,projectId){
   renderChildProjects(childId);
 }
  
-  function renderChildNotes(id){
+function renderChildNotes(id){
 
   const box=document.getElementById("childNotes");
 
   if(!box) return;
 
   const notes=load("childNotes",{});
-
   const list=notes[id] || [];
 
   if(!list.length){
-
-    box.innerHTML=`
-      <p>Noch keine Einträge vorhanden.</p>
-    `;
-
+    box.innerHTML="<p>Noch keine Einträge vorhanden.</p>";
     return;
   }
 
@@ -1654,14 +1649,26 @@ function toggleProjectParticipation(childId,projectId){
 
   list.slice().reverse().forEach((entry,index)=>{
 
+    const originalIndex=list.length-1-index;
+
     html+=`
       <div class="section">
 
         <strong>${shortDate(entry.date)}</strong>
 
-        <div>
-          ${entry.text}
-        </div>
+        <div>${entry.text}</div>
+
+        <button
+          class="smallbtn"
+          onclick="copyChildNote('${id}',${originalIndex})">
+          Eintrag kopieren
+        </button>
+
+        <button
+          class="smallbtn"
+          onclick="deleteChildNote('${id}',${originalIndex})">
+          Eintrag löschen
+        </button>
 
       </div>
     `;
