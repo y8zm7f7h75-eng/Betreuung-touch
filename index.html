@@ -1282,26 +1282,54 @@ function changeArrival(id,time){
 }
 
 
+
 function setDeparture(id){
 
   const date=todayString();
+
+  const a=attendance[date]?.[id] || {};
+
+  if(!a.ankommen){
+    alert("Bitte trage zuerst die Ankommenszeit ein.");
+    return;
+  }
+
+  const jetzt=currentTime();
+
+  if(jetzt < a.ankommen){
+    alert("Die Gehzeit darf nicht vor der Ankommenszeit liegen.");
+    return;
+  }
 
   if(!attendance[date]) attendance[date]={};
 
   attendance[date][id]=attendance[date][id] || {};
 
-  attendance[date][id].gehen=currentTime();
+  attendance[date][id].gehen=jetzt;
 
   save("attendance",attendance);
 
   renderToday(todayClass);
-
 }
 
 
 function changeDeparture(id,time){
 
   const date=todayString();
+
+  const a=attendance[date]?.[id] || {};
+
+  if(time && !a.ankommen){
+    alert("Bitte trage zuerst die Ankommenszeit ein.");
+    renderToday(todayClass);
+    return;
+  }
+
+  if(time && time < a.ankommen){
+    alert("Die Gehzeit darf nicht vor der Ankommenszeit liegen.");
+    renderToday(todayClass);
+    return;
+  }
 
   if(!attendance[date]) attendance[date]={};
 
@@ -1312,7 +1340,6 @@ function changeDeparture(id,time){
   save("attendance",attendance);
 
   renderToday(todayClass);
-
 }
 
 /* -------------------------
