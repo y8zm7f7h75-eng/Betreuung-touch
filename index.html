@@ -1473,33 +1473,31 @@ renderProjects();
   if(!box) return;
 
   const projects=load("projects",[]);
+  const participation=load("projectParticipation",{});
+  const paid=load("projectPaid",{});
 
-  if(!projects.length){
+  const childProjects=projects.filter(project =>
+    participation[id] &&
+    participation[id][project.id]
+  );
+
+  if(!childProjects.length){
 
     box.innerHTML=`
-      <p>Noch keine Projekte angelegt.</p>
+      <p>Dieses Kind nimmt an keinen Projekten teil.</p>
     `;
 
     return;
   }
 
-  const participation=load("projectParticipation",{});
-const paid=load("projectPaid",{});
+  let html="";
 
-if(!participation[id]){
-  participation[id]={};
-}
+  childProjects.forEach(project=>{
 
-if(!paid[id]){
-  paid[id]={};
-}
+    const paidChecked=paid[id] && paid[id][project.id]
+      ? "checked"
+      : "";
 
-let html="";
-
-  projects.forEach(project=>{
-
-    const checked=participation[id][project.id] ? "checked" : "";
-    const paidChecked=paid[id][project.id] ? "checked" : "";
     html+=`
       <div class="child">
 
@@ -1514,22 +1512,22 @@ let html="";
           : ""}
 
         <label>
-  <input
-    type="checkbox"
-    ${checked}
-    onchange="toggleProjectParticipation('${id}','${project.id}')">
-  Nimmt teil
-</label>
+          <input
+            type="checkbox"
+            checked
+            onchange="toggleProjectParticipation('${id}','${project.id}')">
+          Nimmt teil
+        </label>
 
-<br>
+        <br>
 
-<label>
-  <input
-    type="checkbox"
-    ${paidChecked}
-    onchange="toggleProjectPaid('${id}','${project.id}')">
-  Bezahlt
-</label>
+        <label>
+          <input
+            type="checkbox"
+            ${paidChecked}
+            onchange="toggleProjectPaid('${id}','${project.id}')">
+          Bezahlt
+        </label>
 
       </div>
     `;
