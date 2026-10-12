@@ -2345,10 +2345,20 @@ function renderDailyPlan(){
   ${options(times,plan.time)}
 </select>
 
+
+
 <input
+
   type="time"
-  value="${plan.time && !times.includes(plan.time) ? plan.time : ""}"
+
+  value="${plan.time || ""}"
+
+  onfocus="this.dataset.oldValue=this.value"
+
   onchange="changeDailyPlan('${date}','${c.id}',this.value,null)"
+
+  onblur="if(this.value!==this.dataset.oldValue){changeDailyPlan('${date}','${c.id}',this.value,null)}"
+
   title="Eigene Uhrzeit eingeben">
  
   <select
@@ -2397,52 +2407,27 @@ function renderDailyPlan(){
 
   function changeDailyPlan(date,id,time,type,info){
 
-  if(!dailyPlans[date]){
-
-    dailyPlans[date]={};
-
-  }
-
-  const old=dailyPlans[date][id] || getRegularPlan(id,date);
-
-  dailyPlans[date][id]={
-
-    time:time===null ? old.time : time,
-
-    type:type===null ? old.type : type,
-
-     info:info===undefined ? (old.info || "") : info
-
-  };
-
-  save("dailyPlans",dailyPlans);
-
-  renderDailyPlan();
+if(!dailyPlans[date]){
+dailyPlans[date]={};
 }
-  function useRegular(date,id){
 
-  if(dailyPlans[date] && dailyPlans[date][id]){
+const old=dailyPlans[date][id] || getRegularPlan(id,date);
 
-    delete dailyPlans[date][id];
+dailyPlans[date][id]={
 
-  }
+time:time===null ? old.time : time,
+type:type===null ? old.type : type,
+info:info===undefined ? (old.info || "") : info
 
-  if(
+};
 
-    dailyPlans[date] &&
+save("dailyPlans",dailyPlans);
 
-    Object.keys(dailyPlans[date]).length===0
+if(time!==null){
+return;
+}
 
-  ){
-
-    delete dailyPlans[date];
-
-  }
-
-  save("dailyPlans",dailyPlans);
-
-  renderDailyPlan();
-
+renderDailyPlan();
 }
 /* -------------------------
    REGELMÄSSIGE WOCHE
