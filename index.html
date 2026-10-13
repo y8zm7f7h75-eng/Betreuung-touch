@@ -1430,9 +1430,29 @@ renderProjects();
 
       <h3>${child.name}</h3>
 
-      <p>
-        Klasse: <strong>${child.className}</strong>
-      </p>
+      
+
+<p>
+
+  Klasse:
+
+  <select id="childClassSelect"
+
+    onchange="changeChildClass('${child.id}',this.value)">
+
+    ${classes.map(c => `
+
+      <option value="${c[0]}" ${child.className===c[0] ? "selected" : ""}>
+
+        ${c[0]}
+
+      </option>
+
+    `).join("")}
+
+  </select>
+
+</p>
 
       <div class="controls">
 
@@ -1466,6 +1486,23 @@ renderProjects();
 
 }
  
+function changeChildClass(id,newClass){
+
+  const child = children.find(c => c.id === id);
+
+  if(!child) return;
+
+  childClassOverrides[id] = newClass;
+
+  save("childClassOverrides",childClassOverrides);
+
+  child.className = newClass;
+
+  renderAll();
+  renderProjectArchive();
+  selectChildManagement(id);
+}
+
  function renderChildProjects(id){
 
   const box=document.getElementById("childProjects");
