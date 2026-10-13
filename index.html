@@ -1543,6 +1543,7 @@ function changeChildClass(id,newClass){
   save("childClassOverrides",childClassOverrides);
 
   child.className = newClass;
+  child.color = classes.find(c => c[0] === newClass)[1];
 
   renderAll();
   renderProjectArchive();
