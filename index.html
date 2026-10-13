@@ -958,15 +958,23 @@ function weekday(date){
   return new Date(date+"T12:00:00").getDay();
 }
 
+
 function childColor(c){
+
+  const classEntry = classes.find(cls => cls[0] === c.className);
+
+  if(!classEntry) return "#ccc";
+
   const map={
     blau:"#8faec0",
     grün:"#9dbb9d",
     gelb:"#d5bd67",
     rot:"#c98f8f"
   };
-  return map[c.color] || "#ccc";
+
+  return map[classEntry[1]] || "#ccc";
 }
+
 
 function options(list,selected){
   return list.map(x=>{
