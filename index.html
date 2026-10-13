@@ -1922,7 +1922,8 @@ function renderProjectArchive(){
   const archived = load("archivedProjects", []);
   const participation = load("projectParticipation", {});
   const paid = load("projectPaid", {});
-
+  const dismissed = load("archivedDismissedPayments", {});
+ 
   if(!archived.length){
     listBox.innerHTML = "<p>Noch keine Projekte archiviert.</p>";
     openBox.innerHTML = "<p>Keine offenen Beträge.</p>";
@@ -1973,7 +1974,7 @@ function renderProjectArchive(){
                 <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${childColor(child)};margin-right:6px"></span>
                 ${child.name} – ${child.className}
                 <strong style="margin-left:6px">
-                  ${hasPaid ? "Bezahlt" : "Noch offen"}
+                  ${hasPaid ? "Bezahlt" : (dismissed[child.id] && dismissed[child.id][project.id] ? "Entfällt" : "Noch offen")}
                 </strong>
               </div>
             `;
@@ -1998,7 +1999,7 @@ function renderProjectArchive(){
         paid[child.id] &&
         paid[child.id][project.id];
 
-      if(tookPart && !hasPaid){
+      if(tookPart && !hasPaid && !(dismissed[child.id] && dismissed[child.id][project.id])){
 
         const amount = Number(project.amount) || 0;
         totalOpen += amount;
@@ -2011,6 +2012,23 @@ function renderProjectArchive(){
             <div>${child.className}</div>
             <div>Projekt: ${project.name}</div>
             <div>Offen: ${amount.toFixed(2).replace(".", ",")} €</div>
+            
+
+<button class="smallbtn"
+
+  onclick="markArchivedPaymentPaid('${child.id}','${project.id}')">
+
+  Als bezahlt markieren
+
+</button>
+
+<button class="smallbtn"
+
+  onclick="removeArchivedOpenPayment('${child.id}','${project.id}')">
+
+  Offenen Eintrag löschen
+
+</button>
           </div>
         `;
       }
@@ -2029,8 +2047,47 @@ function renderProjectArchive(){
           Offene Beträge drucken
         </button>
       `
-    : "<p>Keine offenen Beträge. Alle teilnehmenden Kinder haben bezahlt.</p>";
+    : "<p>Keine offenen Beträge vorhanden.</p>";
 }
+  
+function markArchivedPaymentPaid(childId,projectId){
+
+  if(!confirm("Ist der Beitrag inzwischen bezahlt?")) return;
+
+  const paid = load("projectPaid",{});
+
+  if(!paid[childId]) paid[childId] = {};
+
+  paid[childId][projectId] = true;
+
+  save("projectPaid",paid);
+
+  const dismissed = load("archivedDismissedPayments",{});
+
+  if(dismissed[childId]){
+    delete dismissed[childId][projectId];
+    save("archivedDismissedPayments",dismissed);
+  }
+
+  renderProjectArchive();
+}
+
+
+function removeArchivedOpenPayment(childId,projectId){
+
+  if(!confirm("Soll diese offene Forderung entfernt werden? Die Projektteilnahme bleibt erhalten.")) return;
+
+  const dismissed = load("archivedDismissedPayments",{});
+
+  if(!dismissed[childId]) dismissed[childId] = {};
+
+  dismissed[childId][projectId] = true;
+
+  save("archivedDismissedPayments",dismissed);
+
+  renderProjectArchive();
+}
+
 
 function restoreProject(projectId){
 
