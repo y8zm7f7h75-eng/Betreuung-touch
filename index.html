@@ -772,9 +772,11 @@ const classes = [
   ["Klasse 2 Affen","grün",11],
   ["Klasse 2 Zebra","grün",13],
   ["Klasse 3","gelb",12],
-  ["Klasse 4","rot",16]
+  ["Klasse 4","rot",19]
 ];
+
 let childClassOverrides=load("childClassOverrides",{});
+let childNames=load("childNames",{});
 
 const children=[];
 let number=1;
@@ -783,13 +785,14 @@ classes.forEach(c=>{
   for(let i=0;i<c[2];i++){
     children.push({
       id:"kind"+number,
-      name:"Kind "+number,
+      name:childNames["kind"+number] || "Kind "+number,
       className:childClassOverrides["kind"+number] || c[0],
       color:c[1]
     });
     number++;
   }
 });
+
 const flexChildren=["kind1"];
 const times=[
   "",
@@ -1428,7 +1431,23 @@ renderProjects();
 
     <div class="section">
 
-      <h3>${child.name}</h3>
+      <h3>Kind verwalten</h3>
+
+<p>
+  Name des Kindes:
+  <input
+    type="text"
+    id="childNameInput"
+    value="${child.name}"
+    placeholder="Vor- und Nachname">
+  <button
+    class="smallbtn"
+    onclick="saveChildName('${child.id}')">
+    Namen speichern
+  </button>
+</p>
+
+<h3>${child.name}</h3>
 
       
 
@@ -1485,6 +1504,33 @@ renderProjects();
     renderChildProjects(child.id);
 
 }
+  
+
+function saveChildName(id){
+
+  const child = children.find(c => c.id === id);
+
+  if(!child) return;
+
+  const input = document.getElementById("childNameInput");
+  const name = input.value.trim();
+
+  if(!name){
+    alert("Bitte einen Namen eingeben.");
+    return;
+  }
+
+  childNames[id] = name;
+  save("childNames",childNames);
+
+  child.name = name;
+
+  renderAll();
+  renderProjectArchive();
+  selectChildManagement(id);
+}
+
+
  
 function changeChildClass(id,newClass){
 
