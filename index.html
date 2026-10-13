@@ -385,6 +385,7 @@ background:#fff0e0;
   <button id="tab-geht" onclick="showTab('geht')">Wer geht wann?</button>
 <button id="tab-wochenuebersicht" class="tab" onclick="showTab('wochenuebersicht')">Wochenübersicht</button>
 <button id="tab-flex" class="tab" onclick="showTab('flex')">Flex-Kinder</button>
+<button id="tab-archiv" class="tab" onclick="showTab('archiv')">Archiv</button>
 </nav>
 <main>
 <section id="wochenuebersicht" class="view">
@@ -762,6 +763,13 @@ background:#fff0e0;
   <h2>Flex-Kinder</h2>
   <div id="flexList"></div>
 </section>
+<section id="archiv" class="view" style="display:none">
+
+  <h2>Archiv – abgemeldete Kinder</h2>
+
+  <div id="archivList"></div>
+
+</section>
 </main>
 
 <script>
@@ -1060,6 +1068,7 @@ if(tab==="alle"){
   if(tab==="woche") renderDailyPlan();
   if(tab==="geht") renderGoing();
   if(tab==="flex") renderFlex();
+  if(tab==="archiv") renderArchive();
   if(tab==="wochenuebersicht"){const p=document.getElementById("weekPicker");if(p&&!p.value)p.value=todayString();renderWeeklyOverview()
   }
 }
@@ -1185,10 +1194,9 @@ function showTodayClass(classNumber){
         <h3>${className}</h3>
     `;
 
-    children
-      .filter(c=>c.className===className)
+   children
+      .filter(c=>c.className===className && !inactiveChildren[c.id])
       .forEach(c=>{
-
         const a=attendance[date]?.[c.id] || {};
 
         html+=`
@@ -1384,7 +1392,7 @@ function renderAll(){
     `;
 
     children
-      .filter(x=>x.className===c[0])
+      .filter(x=>x.className===c[0] && !inactiveChildren[x.id])
       .forEach(x=>{
         html+=`
           <div>${x.name}</div>
@@ -1407,7 +1415,7 @@ if(allList) allList.innerHTML = html;
     select.innerHTML=
       `<option value="">Bitte Kind auswählen</option>`;
 
-    children.forEach(c=>{
+    children.filter(c=>!inactiveChildren[c.id]).forEach(c=>{
 
       const option=document.createElement("option");
 
@@ -1482,6 +1490,21 @@ renderProjects();
 
 </p>
 
+
+
+<div class="controls">
+
+  <button
+
+    class="smallbtn"
+
+    onclick="deactivateChild('${child.id}')">
+
+    Kind aus Betreuung abmelden
+
+  </button>
+
+</div>
       <div class="controls">
 
         <input
@@ -1539,6 +1562,97 @@ function saveChildName(id){
   selectChildManagement(id);
 }
 
+
+function deactivateChild(id){
+
+  const child = children.find(c => c.id === id);
+
+  if(!child) return;
+
+  if(!confirm(
+    "Soll " + child.name +
+    " wirklich aus der Betreuung abgemeldet werden? " +
+    "Die bisherigen Daten bleiben erhalten."
+  )){
+    return;
+  }
+
+  inactiveChildren[id] = {
+    name: child.name,
+    className: child.className,
+    date: todayString()
+  };
+
+  save("inactiveChildren",inactiveChildren);
+
+  renderAll();
+
+  const box = document.getElementById("childManagement");
+  if(box) box.innerHTML = "";
+
+}
+
+function renderArchive(){
+
+  const box = document.getElementById("archivList");
+
+  if(!box) return;
+
+  const inactiveIds = Object.keys(inactiveChildren);
+
+  if(inactiveIds.length === 0){
+    box.innerHTML = "<p>Es sind keine Kinder abgemeldet.</p>";
+    return;
+  }
+  
+
+
+
+  box.innerHTML = inactiveIds.map(id=>{
+
+    const child = children.find(c=>c.id===id);
+    const info = inactiveChildren[id];
+
+    const name = info.name || (child ? child.name : id);
+    const className = info.className || (child ? child.className : "");
+    const date = info.date || "";
+
+    return `
+      <div class="section">
+        <h3>${name}</h3>
+        <p>Frühere Klasse: ${className}</p>
+        <p>Abgemeldet am: ${date}</p>
+        <button class="smallbtn"
+          onclick="reactivateChild('${id}')">
+          Kind wieder anmelden
+        </button>
+      </div>
+    `;
+
+  }).join("");
+
+}
+
+function reactivateChild(id){
+
+  const info = inactiveChildren[id];
+
+  if(!info) return;
+
+  if(!confirm(
+    "Soll dieses Kind wieder für die Betreuung angemeldet werden?"
+  )){
+    return;
+  }
+
+  delete inactiveChildren[id];
+
+  save("inactiveChildren", inactiveChildren);
+
+  renderArchive();
+  renderAll();
+
+}
 
  
 function changeChildClass(id,newClass){
@@ -2312,7 +2426,7 @@ function renderFruitMoney(){
   let openCount=0;
   let paidCount=0;
 
-  children.forEach(child=>{
+  children.filter(child=>!inactiveChildren[child.id]).forEach(child=>{
 
     const isPaid=!!paid[child.id];
 
@@ -2413,9 +2527,10 @@ function renderClassLists(){
   lists.forEach(list => {
 
     const listChildren = children.filter(child =>
-      list.className === "all" ||
-      child.className === list.className
-    );
+  !inactiveChildren[child.id] &&
+  (list.className === "all" ||
+   child.className === list.className)
+);
 
     html += `
       <div class="section">
@@ -2529,9 +2644,10 @@ function printClassList(listId){
   if(!list) return;
 
   const listChildren = children.filter(child =>
-    list.className === "all" ||
-    child.className === list.className
-  );
+  !inactiveChildren[child.id] &&
+  (list.className === "all" ||
+   child.className === list.className)
+);
 
   const rows = listChildren.map(child => {
 
@@ -2655,9 +2771,11 @@ function renderDailyPlan(){
         <h3>${cls[0]}</h3>
     `;
 
-    children
-      .filter(c=>c.className===cls[0])
-      .forEach(c=>{
+    
+children
+  .filter(c=>c.className===cls[0] && !inactiveChildren[c.id])
+  .forEach(c=>{
+
 
         const plan=getPlan(c.id,date);
 
@@ -2812,9 +2930,11 @@ function showRegular(){
 
     html+=`<h3>${cls[0]}</h3>`;
 
-    children
-      .filter(c=>c.className===cls[0])
+    
+children
+      .filter(c=>c.className===cls[0] && !inactiveChildren[c.id])
       .forEach(c=>{
+
 
         html+=`
           <div class="regular-row">
@@ -2894,7 +3014,7 @@ function renderGoing(){
 
   const list=[];
 
-  children.forEach(c=>{
+  children.filter(c=>!inactiveChildren[c.id]).forEach(c=>{
 
     const p=getPlan(c.id,date);
 
@@ -2968,7 +3088,7 @@ list.forEach(x=>{
 
   let html="";
 
-  children.forEach(c=>{
+  children.filter(c=>!inactiveChildren[c.id]).forEach(c=>{
 
     if(!flexChildren.includes(c.id)) return;
 
@@ -3414,7 +3534,7 @@ classes.slice(0,4).forEach(cls=>{
 
   children
 
-    .filter(c=>c.className===cls[0])
+    .filter(c=>c.className===cls[0] && !inactiveChildren[c.id])
 
     .forEach(c=>{
 
@@ -3573,7 +3693,7 @@ classes.slice(4).forEach(cls=>{
 
   children
 
-    .filter(c=>c.className===cls[0])
+    .filter(c=>c.className===cls[0] && !inactiveChildren[c.id])
 
     .forEach(c=>{
 
