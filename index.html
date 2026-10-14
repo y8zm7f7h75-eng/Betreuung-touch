@@ -3372,7 +3372,7 @@ children
             style="border-left-color:${childColor(c)}">
 
             <div class="childtitle">
-              ${c.name}
+                            ${escapeClassListText(c.name)}
               ${plan.exception
                 ? `<span class="classname">Ausnahme für diesen Tag</span>`
                 : `<span class="classname">regelmäßige Planung</span>`
