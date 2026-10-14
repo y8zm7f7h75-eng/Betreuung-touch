@@ -2185,7 +2185,8 @@ function renderArchive(){
     html += archivedFlex.map(child=>`
 
       <div class="section">
-        <h3>${child.name}</h3>
+      <h3>${escapeClassListText(child.name)}</h3>
+        
         <p>Klasse: ${child.className}</p>
         
 <button class="smallbtn"
