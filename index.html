@@ -3786,7 +3786,7 @@ children.filter(c=>!inactiveChildren[c.id] && !archivedFlexChildren.includes(c.i
     html+=`
       <div class="section">
 
-        <h3>${c.name}</h3>
+        <h3>${escapeClassListText(c.name)}</h3>
         <button class="smallbtn"
         onclick="printFlex('${c.id}')">
         Flex-Tage drucken
