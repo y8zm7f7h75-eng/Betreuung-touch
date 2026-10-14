@@ -3655,11 +3655,11 @@ list.forEach(x=>{
           ${checkedGoing[x.child.id] ? "checked" : ""}
 
           onchange="toggleGoing('${x.child.id}')">
-        <strong>${x.child.name}</strong>
+        <strong>${escapeClassListText(x.child.name)}</strong>
       </div>
 
       <div class="type">${x.type || ""}</div>
-      ${x.info ? `<div class="going-info">${x.info}</div>` : ""}
+      ${x.info ? `<div class="going-info">${escapeClassListText(x.info)}</div>` : ""}
     </div>
   `;
 
