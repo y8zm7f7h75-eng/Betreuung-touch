@@ -1379,6 +1379,7 @@ renderArrivalOverview();
 }
   
 
+
 function renderArrivalOverview(){
 
   const regularBox = document.getElementById("regularArrivalList");
@@ -1386,14 +1387,16 @@ function renderArrivalOverview(){
 
   if(!regularBox || !lateBox) return;
 
-  const groups = [
-    "Klasse 1 Affen",
-    "Klasse 1 Zebra",
-    "Klasse 2 Affen",
-    "Klasse 2 Zebra",
-    "Klasse 3",
-    "Klasse 4"
-  ];
+  const classNumber = todayClass || 1;
+
+  const groupsByClass = {
+    1: ["Klasse 1 Affen","Klasse 1 Zebra"],
+    2: ["Klasse 2 Affen","Klasse 2 Zebra"],
+    3: ["Klasse 3"],
+    4: ["Klasse 4"]
+  };
+
+  const groups = groupsByClass[classNumber] || groupsByClass[1];
 
   const days = [
     ["Montag",1],
@@ -1406,12 +1409,12 @@ function renderArrivalOverview(){
   let html = `
     <div class="arrival-table">
       <div class="arrival-row arrival-heading">
-        <span>Klasse</span>
+        <span>Wochentag</span>
         <span>Ankunft</span>
       </div>
   `;
 
-  groups.forEach((group,index)=>{
+  groups.forEach(group=>{
 
     html += `
       <div class="arrival-group">
@@ -1438,11 +1441,13 @@ function renderArrivalOverview(){
     html += `</div>`;
   });
 
-  html += `</div>`;
-
   regularBox.innerHTML = html;
-  lateBox.innerHTML = "<p>Die Sondertermine ergänzen wir als Nächstes.</p>";
+
+  lateBox.innerHTML =
+    "<p>Die Sondertermine ergänzen wir als Nächstes.</p>";
+
 }
+
 
 function changeRegularArrival(key,time){
 
