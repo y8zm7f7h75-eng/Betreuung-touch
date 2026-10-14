@@ -1495,6 +1495,29 @@ function renderLateArrivalList(lateBox){
 
   if(formBox){
     formBox.innerHTML = `
+    <strong>Späte Ankunft eintragen</strong>
+
+<label for="lateChild">Kind</label>
+
+<select id="lateChild">
+
+  <option value="">Kind auswählen</option>
+
+  ${children
+
+    .filter(c=>!inactiveChildren[c.id])
+
+    .map(c=>`
+
+      <option value="${c.id}">
+
+        ${c.name} – ${c.className}
+
+      </option>
+
+    `).join("")}
+
+</select>
       <div class="arrival-group">
             <div class="late-arrival-fields">
       <div class="late-arrival-field">
