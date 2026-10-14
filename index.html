@@ -160,7 +160,31 @@ button{
   padding: 5px;
   background: #fff;
 }
+.late-arrival-fields {
+  display: grid;
+  grid-template-columns: 0.8fr 0.8fr 1.4fr;
+  gap: 6px;
+  align-items: end;
+}
 
+.late-arrival-field {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.late-arrival-field label {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.late-arrival-field select {
+  width: 100%;
+  min-width: 0;
+  padding: 7px 2px;
+  font-size: 12px;
+}
 .arrival-group > strong {
   display: block;
   padding: 6px;
@@ -1472,35 +1496,37 @@ function renderLateArrivalList(lateBox){
   if(formBox){
     formBox.innerHTML = `
       <div class="arrival-group">
-        <strong>Späte Ankunft eintragen</strong>
-
-        <label>Kind</label>
-        <select id="lateChild">
-          <option value="">Kind auswählen</option>
-          ${children
-            .filter(c=>!inactiveChildren[c.id])
-            .map(c=>`
-              <option value="${c.id}">
-                ${c.name} – ${c.className}
-              </option>
-            `).join("")}
-        </select>
-
-        <label>Grund</label>
+            <div class="late-arrival-fields">
+      <div class="late-arrival-field">
+        <label for="lateReason">Grund</label>
         <select id="lateReason">
           <option value="Fö">Fö</option>
           <option value="Musik">Musik</option>
           <option value="GAG">GAG</option>
         </select>
-
-        <label>Uhrzeit</label>
-        <input id="lateTime" type="time">
-
-        <label>Art des Termins</label>
+      </div>
+      <div class="late-arrival-field">
+        <label for="lateTime">Uhrzeit</label>
+        <select id="lateTime">
+          <option value="12:05">12:05</option>
+          <option value="12:50">12:50</option>
+          <option value="12:00">12:00</option>
+          <option value="12:30">12:30</option>
+          <option value="13:00">13:00</option>
+          <option value="13:10">13:10</option>
+          <option value="13:30">13:30</option>
+          <option value="14:00">14:00</option>
+          <option value="14:30">14:30</option>
+        </select>
+      </div>
+      <div class="late-arrival-field">
+        <label for="lateType">Art des Termins</label>
         <select id="lateType" onchange="toggleLateDate()">
           <option value="weekly">Wöchentlich</option>
           <option value="once">Einmalig</option>
         </select>
+      </div>
+    </div>
 
         <div id="lateDateBox" style="display:none">
           <label>Datum</label>
