@@ -814,7 +814,7 @@ additionalChildren.forEach(child=>{
   });
 });
 
-const flexChildren=["kind1"];
+
 const times=[
   "",
   "11:00",
@@ -3196,31 +3196,7 @@ list.forEach(x=>{
 
   document.getElementById("goingList").innerHTML=html;
 }
-  const children=[];
-let number=1;
-
-classes.forEach(c=>{
-  for(let i=0;i<c[2];i++){
-    children.push({
-      id:"kind"+number,
-      name:childNames["kind"+number] || "Kind "+number,
-      className:childClassOverrides["kind"+number] || c[0],
-      color:c[1]
-    });
-    number++;
-  }
-});
-
-additionalChildren.forEach(child=>{
-  const className = childClassOverrides[child.id] || child.className;
-
-  children.push({
-    id: child.id,
-    name: childNames[child.id] || child.name,
-    className: className,
-    color: classes.find(c=>c[0]===className)?.[1] || "blau"
-  });
-});
+  
 
 let flexChildren=load("flexChildren",["kind1"]);
   
