@@ -1750,6 +1750,12 @@ function renderArchive(){
       <div class="section">
         <h3>${child.name}</h3>
         <p>Klasse: ${child.className}</p>
+        
+<button class="smallbtn"
+  onclick="printFlex('${child.id}')">
+  Flex-Tage drucken
+</button>
+
         <button class="smallbtn"
           onclick="restoreFlexChild('${child.id}')">
           Flex-Kind wiederherstellen
