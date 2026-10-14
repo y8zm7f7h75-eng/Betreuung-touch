@@ -786,6 +786,7 @@ const classes = [
 let childClassOverrides=load("childClassOverrides",{});
 let childNames=load("childNames",{});
 let inactiveChildren=load("inactiveChildren",{});
+let additionalChildren=load("additionalChildren",[]);
 
 const children=[];
 let number=1;
@@ -800,6 +801,17 @@ classes.forEach(c=>{
     });
     number++;
   }
+});
+
+additionalChildren.forEach(child=>{
+  const className = childClassOverrides[child.id] || child.className;
+
+  children.push({
+    id: child.id,
+    name: childNames[child.id] || child.name,
+    className: className,
+    color: classes.find(c=>c[0]===className)?.[1] || "blau"
+  });
 });
 
 const flexChildren=["kind1"];
@@ -1401,7 +1413,25 @@ function renderAll(){
 
     html+="</div>";
   });
+  html = `
+    <div class="section">
+      <h3>Neues Kind aufnehmen</h3>
 
+      <label>Name des Kindes:</label>
+      <input type="text" id="newChildName" placeholder="Vor- und Nachname">
+
+      <label>Klasse:</label>
+      <select id="newChildClass">
+        ${classes.map(c=>`
+          <option value="${c[0]}">${c[0]}</option>
+        `).join("")}
+      </select>
+
+      <button class="smallbtn" onclick="addNewChild()">
+        Kind hinzufügen
+      </button>
+    </div>
+  ` + html;
   const allList = document.getElementById("allList");
 if(allList) allList.innerHTML = html;
 
@@ -1429,6 +1459,48 @@ if(allList) allList.innerHTML = html;
   }
 renderProjects();
 }
+  
+function addNewChild(){
+
+  const nameInput = document.getElementById("newChildName");
+  const classInput = document.getElementById("newChildClass");
+
+  const name = nameInput.value.trim();
+  const className = classInput.value;
+
+  if(!name){
+    alert("Bitte einen Namen eingeben.");
+    return;
+  }
+
+  const allIds = children.map(c=>{
+    const match = c.id.match(/^kind(\d+)$/);
+    return match ? Number(match[1]) : 0;
+  });
+
+  const nextNumber = Math.max(70, ...allIds) + 1;
+  const id = "kind" + nextNumber;
+
+  const classInfo = classes.find(c=>c[0]===className);
+
+  const child = {
+    id: id,
+    name: name,
+    className: className,
+    color: classInfo ? classInfo[1] : "blau"
+  };
+
+  additionalChildren.push(child);
+
+  save("additionalChildren", additionalChildren);
+
+  children.push(child);
+
+  renderAll();
+
+  alert(name + " wurde hinzugefügt.");
+}
+
   function selectChildManagement(id){
 
   const box=document.getElementById("childManagement");
@@ -1538,6 +1610,7 @@ renderProjects();
 }
   
 
+
 function saveChildName(id){
 
   const child = children.find(c => c.id === id);
@@ -1557,10 +1630,18 @@ function saveChildName(id){
 
   child.name = name;
 
+  const extraChild = additionalChildren.find(c=>c.id===id);
+
+  if(extraChild){
+    extraChild.name = name;
+    save("additionalChildren",additionalChildren);
+  }
+
   renderAll();
   renderProjectArchive();
   selectChildManagement(id);
 }
+
 
 
 function deactivateChild(id){
@@ -1655,6 +1736,7 @@ function reactivateChild(id){
 }
 
  
+
 function changeChildClass(id,newClass){
 
   const child = children.find(c => c.id === id);
@@ -1666,12 +1748,23 @@ function changeChildClass(id,newClass){
   save("childClassOverrides",childClassOverrides);
 
   child.className = newClass;
-  child.color = classes.find(c => c[0] === newClass)[1];
+
+  const classInfo = classes.find(c => c[0] === newClass);
+  child.color = classInfo ? classInfo[1] : "blau";
+
+  const extraChild = additionalChildren.find(c=>c.id===id);
+
+  if(extraChild){
+    extraChild.className = newClass;
+    extraChild.color = child.color;
+    save("additionalChildren",additionalChildren);
+  }
 
   renderAll();
   renderProjectArchive();
   selectChildManagement(id);
 }
+
 
  function renderChildProjects(id){
 
