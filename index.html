@@ -1692,6 +1692,7 @@ function deactivateChild(id){
 
 }
 
+
 function renderArchive(){
 
   const box = document.getElementById("archivList");
@@ -1700,38 +1701,67 @@ function renderArchive(){
 
   const inactiveIds = Object.keys(inactiveChildren);
 
+  let html = "";
+
   if(inactiveIds.length === 0){
-    box.innerHTML = "<p>Es sind keine Kinder abgemeldet.</p>";
-    return;
+
+    html += "<p>Es sind keine Kinder abgemeldet.</p>";
+
+  } else {
+
+    html += inactiveIds.map(id=>{
+
+      const child = children.find(c=>c.id===id);
+      const info = inactiveChildren[id];
+
+      const name = info.name || (child ? child.name : id);
+      const className = info.className || (child ? child.className : "");
+      const date = info.date || "";
+
+      return `
+        <div class="section">
+          <h3>${name}</h3>
+          <p>Frühere Klasse: ${className}</p>
+          <p>Abgemeldet am: ${date}</p>
+          <button class="smallbtn"
+            onclick="reactivateChild('${id}')">
+            Kind wieder anmelden
+          </button>
+        </div>
+      `;
+
+    }).join("");
   }
-  
 
+  html += "<h3>Archivierte Flex-Kinder</h3>";
 
+  const archivedFlex = archivedFlexChildren
+    .map(id=>children.find(c=>c.id===id))
+    .filter(child=>child);
 
-  box.innerHTML = inactiveIds.map(id=>{
+  if(archivedFlex.length === 0){
 
-    const child = children.find(c=>c.id===id);
-    const info = inactiveChildren[id];
+    html += "<p>Es sind keine Flex-Kinder archiviert.</p>";
 
-    const name = info.name || (child ? child.name : id);
-    const className = info.className || (child ? child.className : "");
-    const date = info.date || "";
+  } else {
 
-    return `
+    html += archivedFlex.map(child=>`
+
       <div class="section">
-        <h3>${name}</h3>
-        <p>Frühere Klasse: ${className}</p>
-        <p>Abgemeldet am: ${date}</p>
+        <h3>${child.name}</h3>
+        <p>Klasse: ${child.className}</p>
         <button class="smallbtn"
-          onclick="reactivateChild('${id}')">
-          Kind wieder anmelden
+          onclick="restoreFlexChild('${child.id}')">
+          Flex-Kind wiederherstellen
         </button>
       </div>
-    `;
 
-  }).join("");
+    `).join("");
+  }
 
+  box.innerHTML = html;
 }
+
 
 function reactivateChild(id){
 
@@ -3199,7 +3229,7 @@ list.forEach(x=>{
   
 
 let flexChildren=load("flexChildren",["kind1"]);
-  
+  let archivedFlexChildren=load("archivedFlexChildren",[]);
 function toggleFlexChild(id, enabled){
 
   if(enabled){
@@ -3223,7 +3253,9 @@ function toggleFlexChild(id, enabled){
 
   let html="";
 
-  children.filter(c=>!inactiveChildren[c.id]).forEach(c=>{
+  
+children.filter(c=>!inactiveChildren[c.id] && !archivedFlexChildren.includes(c.id)).forEach(c=>{
+
 
     if(!flexChildren.includes(c.id)) return;
 
@@ -3316,7 +3348,10 @@ function toggleFlexChild(id, enabled){
         onclick="printFlex('${c.id}')">
         Flex-Tage drucken
         </button>
-
+<button class="smallbtn"
+onclick="archiveFlexChild('${c.id}')">
+Flex-Kind archivieren
+</button>
         <div>
           <strong>${count} von 50 Flex-Tagen genutzt</strong>
         </div>
@@ -3347,6 +3382,40 @@ function toggleFlexChild(id, enabled){
   document.getElementById("flexList").innerHTML=html;
 
 }
+  
+
+function archiveFlexChild(id){
+
+  if(!archivedFlexChildren.includes(id)){
+    archivedFlexChildren.push(id);
+  }
+
+  flexChildren = flexChildren.filter(childId=>childId!==id);
+
+  save("flexChildren",flexChildren);
+  save("archivedFlexChildren",archivedFlexChildren);
+
+  renderFlex();
+  renderArchive();
+}
+
+function restoreFlexChild(id){
+
+  archivedFlexChildren =
+    archivedFlexChildren.filter(childId=>childId!==id);
+
+  if(!flexChildren.includes(id)){
+    flexChildren.push(id);
+  }
+
+  save("flexChildren",flexChildren);
+  save("archivedFlexChildren",archivedFlexChildren);
+
+  renderFlex();
+  renderArchive();
+}
+
+
 function printFlex(id){
 
   const child=children.find(c=>c.id===id);
