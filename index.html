@@ -554,6 +554,7 @@ background:#fff0e0;
     <h3>Späte Ankunft</h3>
 
     <div id="lateArrivalList"></div>
+    <div id="lateArrivalForm"></div>
 
   </div>
 
@@ -1443,8 +1444,7 @@ function renderArrivalOverview(){
 
   regularBox.innerHTML = html;
 
-  lateBox.innerHTML =
-    "<p>Die Sondertermine ergänzen wir als Nächstes.</p>";
+  renderLateArrivalList(lateBox);
 
 }
 
@@ -1461,6 +1461,163 @@ function changeRegularArrival(key,time){
 }
 
 
+function renderLateArrivalList(lateBox){
+
+  const date = todayString();
+  const dayNumber = weekday(date);
+
+  const formBox = document.getElementById("lateArrivalForm");
+
+  if(formBox){
+    formBox.innerHTML = `
+      <div class="arrival-group">
+        <strong>Späte Ankunft eintragen</strong>
+
+        <label>Kind</label>
+        <select id="lateChild">
+          <option value="">Kind auswählen</option>
+          ${children
+            .filter(c=>!inactiveChildren[c.id])
+            .map(c=>`
+              <option value="${c.id}">
+                ${c.name} – ${c.className}
+              </option>
+            `).join("")}
+        </select>
+
+        <label>Grund</label>
+        <select id="lateReason">
+          <option value="Fö">Fö</option>
+          <option value="Musik">Musik</option>
+          <option value="GAG">GAG</option>
+        </select>
+
+        <label>Uhrzeit</label>
+        <input id="lateTime" type="time">
+
+        <label>Art des Termins</label>
+        <select id="lateType" onchange="toggleLateDate()">
+          <option value="weekly">Wöchentlich</option>
+          <option value="once">Einmalig</option>
+        </select>
+
+        <div id="lateDateBox" style="display:none">
+          <label>Datum</label>
+          <input id="lateDate" type="date">
+        </div>
+
+        <div id="lateWeekdayBox">
+          <label>Wochentag</label>
+          <select id="lateWeekday">
+            <option value="1">Montag</option>
+            <option value="2">Dienstag</option>
+            <option value="3">Mittwoch</option>
+            <option value="4">Donnerstag</option>
+            <option value="5">Freitag</option>
+          </select>
+        </div>
+
+        <button class="smallbtn" onclick="addLateArrival()">
+          Termin speichern
+        </button>
+      </div>
+    `;
+  }
+  const entries = Object.values(lateArrivals).filter(entry=>{
+
+    if(!entry) return false;
+
+    if(entry.date){
+      return entry.date === date;
+    }
+
+    return Number(entry.weekday) === dayNumber;
+  });
+
+  if(entries.length === 0){
+    lateBox.innerHTML =
+      "<p>Für heute sind keine späten Ankünfte eingetragen.</p>";
+    return;
+  }
+
+  entries.sort((a,b)=>
+    (a.time || "").localeCompare(b.time || "")
+  );
+
+  lateBox.innerHTML = entries.map(entry=>{
+
+    const child = children.find(c=>c.id===entry.childId);
+
+    if(!child) return "";
+
+    return `
+      <div class="arrival-group">
+        <strong>${entry.time || "--:--"} · ${entry.reason || ""}</strong>
+        <div>${child.name}</div>
+        <small>${child.className}</small>
+      </div>
+    `;
+
+  }).join("");
+}
+
+
+function toggleLateDate(){
+
+  const type = document.getElementById("lateType").value;
+
+  document.getElementById("lateDateBox").style.display =
+    type === "once" ? "block" : "none";
+
+  document.getElementById("lateWeekdayBox").style.display =
+    type === "weekly" ? "block" : "none";
+}
+
+
+function addLateArrival(){
+
+  const childId = document.getElementById("lateChild").value;
+  const reason = document.getElementById("lateReason").value;
+  const time = document.getElementById("lateTime").value;
+  const type = document.getElementById("lateType").value;
+
+  if(!childId || !time){
+    alert("Bitte Kind und Uhrzeit auswählen.");
+    return;
+  }
+
+  const entry = {
+    childId: childId,
+    reason: reason,
+    time: time
+  };
+
+  if(type === "weekly"){
+
+    entry.weekday =
+      Number(document.getElementById("lateWeekday").value);
+
+  } else {
+
+    const date = document.getElementById("lateDate").value;
+
+    if(!date){
+      alert("Bitte ein Datum auswählen.");
+      return;
+    }
+
+    entry.date = date;
+  }
+
+  const id = "late_" + Date.now();
+
+  lateArrivals[id] = entry;
+
+  save("lateArrivals",lateArrivals);
+
+  renderArrivalOverview();
+
+}
 
 function currentTime(){
   return new Date().toLocaleTimeString("de-DE",{
