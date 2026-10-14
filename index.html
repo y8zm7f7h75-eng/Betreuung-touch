@@ -1461,6 +1461,7 @@ function changeRegularArrival(key,time){
 }
 
 
+
 function renderLateArrivalList(lateBox){
 
   const date = todayString();
@@ -1523,7 +1524,7 @@ function renderLateArrivalList(lateBox){
       </div>
     `;
   }
-  
+
   const groupsByClass = {
     1: ["Klasse 1 Affen","Klasse 1 Zebra"],
     2: ["Klasse 2 Affen","Klasse 2 Zebra"],
@@ -1534,7 +1535,7 @@ function renderLateArrivalList(lateBox){
   const selectedClasses =
     groupsByClass[todayClass || 1] || groupsByClass[1];
 
-  const entries = Object.values(lateArrivals).filter(entry=>{
+  const entries = Object.entries(lateArrivals).filter(([id,entry])=>{
 
     if(!entry) return false;
 
@@ -1551,7 +1552,6 @@ function renderLateArrivalList(lateBox){
     return Number(entry.weekday) === dayNumber;
   });
 
-
   if(entries.length === 0){
     lateBox.innerHTML =
       "<p>Für heute sind keine späten Ankünfte eingetragen.</p>";
@@ -1559,10 +1559,10 @@ function renderLateArrivalList(lateBox){
   }
 
   entries.sort((a,b)=>
-    (a.time || "").localeCompare(b.time || "")
+    (a[1].time || "").localeCompare(b[1].time || "")
   );
 
-  lateBox.innerHTML = entries.map(entry=>{
+  lateBox.innerHTML = entries.map(([id,entry])=>{
 
     const child = children.find(c=>c.id===entry.childId);
 
@@ -1573,11 +1573,30 @@ function renderLateArrivalList(lateBox){
         <strong>${entry.time || "--:--"} · ${entry.reason || ""}</strong>
         <div>${child.name}</div>
         <small>${child.className}</small>
+        <button class="smallbtn"
+          onclick="deleteLateArrival('${id}')">
+          Löschen
+        </button>
       </div>
     `;
 
   }).join("");
 }
+
+
+function deleteLateArrival(id){
+
+  if(!lateArrivals[id]) return;
+
+  if(!confirm("Diesen Termin wirklich löschen?")) return;
+
+  delete lateArrivals[id];
+
+  save("lateArrivals",lateArrivals);
+
+  renderArrivalOverview();
+}
+
 
 
 function toggleLateDate(){
