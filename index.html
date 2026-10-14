@@ -1844,7 +1844,8 @@ function renderAll(){
       .filter(x=>x.className===c[0] && !inactiveChildren[x.id])
       .forEach(x=>{
         html+=`
-          <div>${x.name}</div>
+                  <div>${escapeClassListText(child.name)}</div>
+        <small>${escapeClassListText(child.className)}</small>
         `;
       });
 
