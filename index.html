@@ -3019,8 +3019,8 @@ function renderFruitMoney(){
       <div class="child"
            style="border-left-color:${childColor(child)}">
 
-        <strong>${child.name}</strong>
-        <div class="classname">${child.className}</div>
+        <strong>${escapeClassListText(child.name)}</strong>
+        <div class="classname">${escapeClassListText(child.className)}</div>
         <div>${amount.toFixed(2).replace(".",",")} €</div>
 
         <label>
