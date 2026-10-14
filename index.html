@@ -1964,7 +1964,7 @@ function addNewChild(){
   <input
     type="text"
     id="childNameInput"
-    value="${child.name}"
+    value="${escapeClassListText(child.name)}"
     placeholder="Vor- und Nachname">
   <button
     class="smallbtn"
@@ -1973,7 +1973,7 @@ function addNewChild(){
   </button>
 </p>
 
-<h3>${child.name}</h3>
+<h3>${escapeClassListText(child.name)}</h3>
 
 
 <p>
@@ -2291,7 +2291,7 @@ function changeChildClass(id,newClass){
     html+=`
       <div class="child">
 
-        <strong>${project.name}</strong>
+        <strong>${escapeClassListText(project.name)}</strong>
 
         ${project.amount
           ? `<div>Betrag: ${project.amount} €</div>`
