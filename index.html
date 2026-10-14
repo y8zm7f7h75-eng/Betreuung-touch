@@ -1523,9 +1523,26 @@ function renderLateArrivalList(lateBox){
       </div>
     `;
   }
+  
+  const groupsByClass = {
+    1: ["Klasse 1 Affen","Klasse 1 Zebra"],
+    2: ["Klasse 2 Affen","Klasse 2 Zebra"],
+    3: ["Klasse 3"],
+    4: ["Klasse 4"]
+  };
+
+  const selectedClasses =
+    groupsByClass[todayClass || 1] || groupsByClass[1];
+
   const entries = Object.values(lateArrivals).filter(entry=>{
 
     if(!entry) return false;
+
+    const child = children.find(c=>c.id===entry.childId);
+
+    if(!child || !selectedClasses.includes(child.className)){
+      return false;
+    }
 
     if(entry.date){
       return entry.date === date;
@@ -1533,6 +1550,7 @@ function renderLateArrivalList(lateBox){
 
     return Number(entry.weekday) === dayNumber;
   });
+
 
   if(entries.length === 0){
     lateBox.innerHTML =
