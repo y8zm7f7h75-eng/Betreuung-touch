@@ -2448,7 +2448,7 @@ function renderChildNotes(id){
 
         <strong>${shortDate(entry.date)}</strong>
 
-        <div>${entry.text}</div>
+        <div>${escapeClassListText(entry.text)}</div>
 
         <button
           class="smallbtn"
