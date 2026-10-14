@@ -1628,8 +1628,8 @@ function renderLateArrivalList(lateBox){
     return `
       <div class="arrival-group">
         <strong>${entry.time || "--:--"} · ${entry.reason || ""}</strong>
-        <div>${child.name}</div>
-        <small>${child.className}</small>
+                <div>${escapeClassListText(child.name)}</div>
+        <small>${escapeClassListText(child.className)}</small>
         <button class="smallbtn"
           onclick="deleteLateArrival('${id}')">
           Löschen
