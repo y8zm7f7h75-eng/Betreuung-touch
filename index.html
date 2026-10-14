@@ -111,6 +111,85 @@ button{
   background:#6b8e9e;
   color:white;
 }
+  
+.today-arrival-overview {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 12px 0;
+}
+
+.arrival-column {
+  min-width: 0;
+  padding: 12px;
+  background: #ffffff;
+  border: 1px solid #d5dfe3;
+  border-radius: 10px;
+}
+
+.arrival-column h3 {
+  margin-top: 0;
+  font-size: 16px;
+}
+
+.arrival-table {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.arrival-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 100px;
+  align-items: center;
+  gap: 8px;
+  padding: 6px;
+  border-bottom: 1px solid #d5e5eb;
+  font-size: 13px;
+}
+
+.arrival-heading {
+  font-weight: bold;
+  background: #e4f2f6;
+  border-radius: 6px;
+}
+
+.arrival-group {
+  border: 1px solid #d5dfe3;
+  border-radius: 8px;
+  padding: 5px;
+  background: #fff;
+}
+
+.arrival-group > strong {
+  display: block;
+  padding: 6px;
+  color: #355c73;
+  font-size: 14px;
+}
+
+.arrival-row input[type="time"] {
+  width: 100%;
+  min-width: 0;
+  padding: 6px 3px;
+  border: 1px solid #cbdbe2;
+  border-radius: 6px;
+  background: #fff;
+  color: #263238;
+  font-size: 14px;
+}
+
+@media (max-width: 600px) {
+  .today-arrival-overview {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .arrival-column {
+    padding: 8px;
+  }
+}
+
 .child{
   background:#fafafa;
   border-left:7px solid #ccc;
@@ -458,6 +537,27 @@ background:#fff0e0;
     </button>
 
   </div>
+  
+
+<div class="today-arrival-overview">
+
+  <div class="arrival-column">
+
+    <h3>Reguläre Ankunft</h3>
+
+    <div id="regularArrivalList"></div>
+
+  </div>
+
+  <div class="arrival-column">
+
+    <h3>Späte Ankunft</h3>
+
+    <div id="lateArrivalList"></div>
+
+  </div>
+
+</div>
 
   <div id="todayList"></div>
 
@@ -942,6 +1042,8 @@ let attendance=load("attendance",{});
 let dailyPlans=load("dailyPlans",{});
 let regularPlans=load("regularPlans",{});
 let closedDays=load("closedDays",{});
+let regularArrivals=load("regularArrivals",{});
+let lateArrivals=load("lateArrivals",{});
 
 
 /*
@@ -1273,8 +1375,87 @@ function showTodayClass(classNumber){
   });
 
   document.getElementById("todayList").innerHTML=html;
-
+renderArrivalOverview();
 }
+  
+
+function renderArrivalOverview(){
+
+  const regularBox = document.getElementById("regularArrivalList");
+  const lateBox = document.getElementById("lateArrivalList");
+
+  if(!regularBox || !lateBox) return;
+
+  const groups = [
+    "Klasse 1 Affen",
+    "Klasse 1 Zebra",
+    "Klasse 2 Affen",
+    "Klasse 2 Zebra",
+    "Klasse 3",
+    "Klasse 4"
+  ];
+
+  const days = [
+    ["Montag",1],
+    ["Dienstag",2],
+    ["Mittwoch",3],
+    ["Donnerstag",4],
+    ["Freitag",5]
+  ];
+
+  let html = `
+    <div class="arrival-table">
+      <div class="arrival-row arrival-heading">
+        <span>Klasse</span>
+        <span>Ankunft</span>
+      </div>
+  `;
+
+  groups.forEach((group,index)=>{
+
+    html += `
+      <div class="arrival-group">
+        <strong>${group}</strong>
+    `;
+
+    days.forEach(([day,dayNumber])=>{
+
+      const key = dayNumber + "|" + group;
+      const time = regularArrivals[key] || "";
+
+      html += `
+        <label class="arrival-row">
+          <span>${day}</span>
+          <input
+            type="time"
+            value="${time}"
+            onchange="changeRegularArrival('${key}',this.value)"
+            aria-label="${group}, ${day}">
+        </label>
+      `;
+    });
+
+    html += `</div>`;
+  });
+
+  html += `</div>`;
+
+  regularBox.innerHTML = html;
+  lateBox.innerHTML = "<p>Die Sondertermine ergänzen wir als Nächstes.</p>";
+}
+
+function changeRegularArrival(key,time){
+
+  if(time){
+    regularArrivals[key] = time;
+  } else {
+    delete regularArrivals[key];
+  }
+
+  save("regularArrivals",regularArrivals);
+}
+
+
 
 function currentTime(){
   return new Date().toLocaleTimeString("de-DE",{
