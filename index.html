@@ -2187,7 +2187,7 @@ function renderArchive(){
       <div class="section">
       <h3>${escapeClassListText(child.name)}</h3>
         
-        <p>Klasse: ${child.className}</p>
+        <p>Klasse: ${escapeClassListText(child.className)}</p>
         
 <button class="smallbtn"
   onclick="printFlex('${child.id}')">
