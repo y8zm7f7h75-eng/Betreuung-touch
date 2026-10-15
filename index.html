@@ -1451,7 +1451,7 @@ function renderArrivalOverview(){
 
     html += `
       <div class="arrival-group">
-        <strong>${group}</strong>
+        <strong>${escapeClassListText(group)}</strong>
     `;
 
     days.forEach(([day,dayNumber])=>{
