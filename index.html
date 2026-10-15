@@ -1627,7 +1627,7 @@ function renderLateArrivalList(lateBox){
 
     return `
       <div class="arrival-group">
-        <strong>${entry.time || "--:--"} · ${entry.reason || ""}</strong>
+        <strong>${escapeClassListText(entry.time || "--:--")} · ${escapeClassListText(entry.reason || "")}</strong>
                 <div>${escapeClassListText(child.name)}</div>
         <small>${escapeClassListText(child.className)}</small>
         <button class="smallbtn"
@@ -2159,7 +2159,7 @@ function renderArchive(){
         <div class="section">
                    <h3>${escapeClassListText(name)}</h3>
           <p>Frühere Klasse: ${escapeClassListText(className)}</p>
-          <p>Abgemeldet am: ${date}</p>
+          <p>Abgemeldet am: ${escapeClassListText(date)}</p>
           <button class="smallbtn"
             onclick="reactivateChild('${id}')">
             Kind wieder anmelden
@@ -4098,7 +4098,7 @@ let hinweis="";
 if(geschlossen){
 
   hinweis=`
-    🔒 ${geschlossen}
+    🔒 ${escapeClassListText(geschlossen)}
     <br>
     <button
       class="smallbtn"
@@ -4256,7 +4256,7 @@ let hinweis="";
 if(geschlossen){
 
   hinweis=`
-    🔒 ${geschlossen}
+    🔒 ${escapeClassListText(geschlossen)}
     <br>
     <button
       class="smallbtn"
