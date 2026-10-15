@@ -1365,7 +1365,7 @@ function showTodayClass(classNumber){
 
   ${a.ankommen
 
-    ? "Ankommen "+a.ankommen
+    ? "Ankommen "+escapeClassListText(a.ankommen)
 
     : "Ankommen"}
 
@@ -1517,7 +1517,7 @@ function renderLateArrivalList(lateBox){
 
     .map(c=>`
 
-      <option value="${c.id}">
+      <option value="${escapeClassListText(c.id)}">
 
         ${escapeClassListText(c.name)} – ${escapeClassListText(c.className)}
 
