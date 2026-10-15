@@ -1968,7 +1968,7 @@ function addNewChild(){
     placeholder="Vor- und Nachname">
   <button
     class="smallbtn"
-    onclick="saveChildName('${child.id}')">
+    onclick="saveChildName('${escapeClassListText(child.id)}')">
     Namen speichern
   </button>
 </p>
@@ -1986,7 +1986,7 @@ function addNewChild(){
 
       ${flexChildren.includes(child.id) ? "checked" : ""}
 
-      onchange="toggleFlexChild('${child.id}',this.checked)">
+      onchange="toggleFlexChild('${escapeClassListText(child.id)}',this.checked)">
 
     Flexfunktion für dieses Kind aktiv
 
@@ -2002,7 +2002,7 @@ function addNewChild(){
 
   <select id="childClassSelect"
 
-    onchange="changeChildClass('${child.id}',this.value)">
+    onchange="changeChildClass('${escapeClassListText(child.id)}',this.value)">
 
     ${classes.map(c => `
 
@@ -2026,7 +2026,7 @@ function addNewChild(){
 
     class="smallbtn"
 
-    onclick="deactivateChild('${child.id}')">
+    onclick="deactivateChild('${escapeClassListText(child.id)}')">
 
     Kind aus Betreuung abmelden
 
