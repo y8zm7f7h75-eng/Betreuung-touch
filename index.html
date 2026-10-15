@@ -2802,9 +2802,9 @@ function renderProjectArchive(){
         openHtml += `
           <div class="child"
             style="border-left-color:${childColor(child)}">
-            <strong>${child.name}</strong>
-            <div>${child.className}</div>
-            <div>Projekt: ${project.name}</div>
+            <strong>${escapeClassListText(child.name)}</strong>
+            <div>${escapeClassListText(child.className)}</div>
+            <div>Projekt: ${escapeClassListText(project.name)}</div>
             <div>Offen: ${amount.toFixed(2).replace(".", ",")} €</div>
             
 
