@@ -3763,14 +3763,15 @@ children.filter(c=>!inactiveChildren[c.id] && !archivedFlexChildren.includes(c.i
             <th>Datum</th>
             <th>Gehzeit</th>
           </tr>
-
+        
           ${days.map((d,i)=>`
             <tr>
               <td>${i+1}</td>
-              <td>${formatDate(d.date)}</td>
-              <td>${d.time}</td>
+              <td>${escapeClassListText(formatDate(d.date))}</td>
+              <td>${escapeClassListText(d.time)}</td>
             </tr>
           `).join("")}
+          
 
         </table>
       `;
@@ -3897,11 +3898,11 @@ function printFlex(id){
 
   days.forEach((d,i)=>{
 
-    rows+=`
+        rows+=`
       <tr>
         <td>${i+1}</td>
-        <td>${formatDate(d.date)}</td>
-        <td>${d.time}</td>
+        <td>${escapeClassListText(formatDate(d.date))}</td>
+        <td>${escapeClassListText(d.time)}</td>
       </tr>
     `;
 
