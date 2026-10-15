@@ -1136,14 +1136,14 @@ function options(list,selected){
   return list.map(x=>{
     const value=x;
     const text=x || "keine Planung";
-    return `<option value="${value}" ${value===selected?"selected":""}>${text}</option>`;
+    return `<option value="${escapeClassListText(value)}" ${value===selected?"selected":""}>${escapeClassListText(text)}</option>`;
   }).join("");
 }
 
 function typeOptions(selected){
   return types.map(x=>{
     const text=x || "–";
-    return `<option value="${x}" ${x===selected?"selected":""}>${text}</option>`;
+   return `<option value="${escapeClassListText(x)}" ${x===selected?"selected":""}>${escapeClassListText(text)}</option>`;
   }).join("");
 }
 
@@ -1375,7 +1375,7 @@ function showTodayClass(classNumber){
 
   type="time"
 
-  value="${a.ankommen || ""}"
+  value="${escapeClassListText(a.ankommen || "")}"
 
   onchange="changeArrival('${c.id}',this.value)"
 
@@ -1384,13 +1384,13 @@ function showTodayClass(classNumber){
               <button class="smallbtn"
                 onclick="setDeparture('${c.id}')">
                 ${a.gehen
-                  ? "Gehen "+a.gehen
+                 ? "Gehen "+escapeClassListText(a.gehen)
                   : "Gehen"}
               </button>
 
               <input
                 type="time"
-                value="${a.gehen || ""}"
+                value="${escapeClassListText(a.gehen || "")}"
                 onchange="changeDeparture('${c.id}',this.value)"
                 title="Gehzeit eintragen oder korrigieren">
 
@@ -1464,7 +1464,7 @@ function renderArrivalOverview(){
           <span>${day}</span>
           <input
             type="time"
-            value="${time}"
+            value="${escapeClassListText(time)}"
             onchange="changeRegularArrival('${key}',this.value)"
             aria-label="${group}, ${day}">
         </label>
@@ -1631,7 +1631,7 @@ function renderLateArrivalList(lateBox){
                 <div>${escapeClassListText(child.name)}</div>
         <small>${escapeClassListText(child.className)}</small>
         <button class="smallbtn"
-          onclick="deleteLateArrival('${id}')">
+          onclick="deleteLateArrival('${escapeClassListText(id)}')">
           Löschen
         </button>
       </div>
