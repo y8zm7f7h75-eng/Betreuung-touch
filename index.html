@@ -2453,7 +2453,7 @@ function renderChildNotes(id){
 
         <button
           class="smallbtn"
-          onclick="copyChildNote('${id}',${originalIndex})">
+          onclick="copyChildNote('${escapeClassListText(id)}',${originalIndex})">
           Eintrag kopieren
         </button>
 
@@ -3586,11 +3586,12 @@ function changeRegular(id,wd,field,value){
 /* -------------------------
    WER GEHT HEUTE?
 ------------------------- */
-let checkedGoing=JSON.parse(localStorage.getItem("checkedGoing")||"{}");
+let checkedGoing=load("checkedGoing",{});
 
 function toggleGoing(id){
 
-  checkedGoing[id]=!checkedGoing[id];localStorage.setItem("checkedGoing",JSON.stringify(checkedGoing));
+  checkedGoing[id]=!checkedGoing[id];
+save("checkedGoing",checkedGoing);
 
   renderGoing();
 
