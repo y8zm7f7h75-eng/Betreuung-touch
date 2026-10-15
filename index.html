@@ -1352,7 +1352,7 @@ function showTodayClass(classNumber){
 
             <div class="childtitle">
                             ${escapeClassListText(c.name)}
-              <span class="classname">${c.className}</span>
+              <span class="classname">${escapeClassListText(c.className)}</span>
             </div>
 
             <div class="controls">
@@ -4193,7 +4193,7 @@ classes.slice(0,4).forEach(cls=>{
 
           <td class="child-name">
 
-            ${c.name}
+            ${escapeClassListText(c.name)}
 
           </td>
 
@@ -4352,7 +4352,7 @@ classes.slice(4).forEach(cls=>{
 
           <td class="child-name">
 
-            ${c.name}
+            ${escapeClassListText(c.name)}
 
           </td>
 
