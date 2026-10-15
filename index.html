@@ -2573,12 +2573,12 @@ function deleteChildNote(id,index){
         <strong>${escapeClassListText(project.name)}</strong>
 
         ${project.amount
-          ? `<div>Betrag: ${project.amount} €</div>`
+          ? `<div>Betrag: ${escapeClassListText(project.amount)} €</div>`
           : ""}
 
         
         ${project.due
-          ? `<div>Fällig: ${shortDate(project.due)}</div>`
+          ? `<div>Fällig: ${escapeClassListText(shortDate(project.due))}</div>`
           : ""}
 
         <button class="smallbtn"
@@ -2737,11 +2737,11 @@ function renderProjectArchive(){
         <strong>${escapeClassListText(project.name)}</strong>
 
         ${project.amount
-          ? `<div>Betrag pro Kind: ${project.amount} €</div>`
+          ? `<div>Betrag pro Kind: ${escapeClassListText(project.amount)} €</div>`
           : ""}
 
         ${project.due
-          ? `<div>Fällig: ${shortDate(project.due)}</div>`
+          ? `<div>Fällig: ${escapeClassListText(shortDate(project.due))}</div>`
           : ""}
 
         <div style="margin-top:10px">
