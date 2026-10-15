@@ -4208,13 +4208,13 @@ classes.slice(0,4).forEach(cls=>{
 
           <td class="${i>0 ? "day-start":""}">
 
-            ${a.ankommen || "–"}
+            ${escapeClassListText(a.ankommen || "–")}
 
           </td>
 
           <td>
 
-            ${a.gehen || "–"}
+            ${escapeClassListText(a.gehen || "–")}
 
           </td>
 
@@ -4367,13 +4367,13 @@ classes.slice(4).forEach(cls=>{
 
           <td class="${i>0 ? "day-start":""}">
 
-            ${a.ankommen || "–"}
+            ${escapeClassListText(a.ankommen || "–")}
 
           </td>
 
           <td>
 
-            ${a.gehen || "–"}
+            ${escapeClassListText(a.gehen || "–")}
 
           </td>
 
