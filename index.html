@@ -2447,7 +2447,7 @@ function renderChildNotes(id){
     html+=`
       <div class="section">
 
-        <strong>${shortDate(entry.date)}</strong>
+        <strong>${escapeClassListText(shortDate(entry.date))}</strong>
 
         <div>${escapeClassListText(entry.text)}</div>
 
@@ -3346,7 +3346,7 @@ function renderDailyPlan(){
   document.getElementById("dailyPlanning").style.display="block";
 
   document.getElementById("dateInfo").innerHTML=
-    `<strong>${formatDate(date)}</strong>
+    `<strong>${escapeClassListText(formatDate(date))}</strong>
      – Tippe hier die Planung für genau diesen Tag ein.`;
 
   let html="";
@@ -3660,7 +3660,7 @@ list.forEach(x=>{
         <strong>${escapeClassListText(x.child.name)}</strong>
       </div>
 
-      <div class="type">${x.type || ""}</div>
+      <div class="type">${escapeClassListText(x.type || "")}</div>
       ${x.info ? `<div class="going-info">${escapeClassListText(x.info)}</div>` : ""}
     </div>
   `;
