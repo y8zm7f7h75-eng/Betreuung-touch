@@ -1338,7 +1338,7 @@ function showTodayClass(classNumber){
     html+=`
       <div class="section">
 
-        <h3>${className}</h3>
+        <h3>${escapeClassListText(className)}</h3>
     `;
 
    children
@@ -2570,7 +2570,7 @@ function deleteChildNote(id,index){
     html+=`
       <div class="section">
 
-        <strong>${project.name}</strong>
+        <strong>${escapeClassListText(project.name)}</strong>
 
         ${project.amount
           ? `<div>Betrag: ${project.amount} €</div>`
@@ -2734,7 +2734,7 @@ function renderProjectArchive(){
     projectHtml += `
       
       <div class="section">
-        <strong>${project.name}</strong>
+        <strong>${escapeClassListText(project.name)}</strong>
 
         ${project.amount
           ? `<div>Betrag pro Kind: ${project.amount} €</div>`
