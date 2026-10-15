@@ -2295,11 +2295,11 @@ function changeChildClass(id,newClass){
         <strong>${escapeClassListText(project.name)}</strong>
 
         ${project.amount
-          ? `<div>Betrag: ${project.amount} €</div>`
+          ? `<div>Betrag: ${escapeClassListText(project.amount)} €</div>`
           : ""}
 
         ${project.due
-          ? `<div>Fällig: ${shortDate(project.due)}</div>`
+          ? `<div>Fällig: ${escapeClassListText(shortDate(project.due))}</div>`
           : ""}
 
         <label>
@@ -3392,7 +3392,7 @@ children
 
   type="time"
 
-  value="${plan.time || ""}"
+  value="${escapeClassListText(plan.time || "")}"
 
   onfocus="this.dataset.oldValue=this.value"
 
@@ -3647,7 +3647,7 @@ list.forEach(x=>{
     <div class="going"
       style="border-left:7px solid ${childColor(x.child)}">
 
-      <div class="time">${x.time}</div>
+      <div class="time">${escapeClassListText(x.time)}</div>
 
       <div>
                 <input
