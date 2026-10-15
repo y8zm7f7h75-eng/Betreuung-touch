@@ -1734,17 +1734,23 @@ function currentTime(){
 
 function setArrival(id){
 
-  const date=todayString();
+const date=todayString();
+const a=attendance[date]?.[id] || {};
+const jetzt=currentTime();
 
-  if(!attendance[date]) attendance[date]={};
+if(a.gehen && jetzt.localeCompare(a.gehen)>0){
+alert(“Die Ankommenszeit darf nicht nach der Gehzeit liegen.”);
+return;
+}
 
-  attendance[date][id]=attendance[date][id] || {};
+if(!attendance[date]) attendance[date]={};
 
-  attendance[date][id].ankommen=currentTime();
+attendance[date][id]=attendance[date][id] || {};
+attendance[date][id].ankommen=jetzt;
 
-  save("attendance",attendance);
+save(“attendance”,attendance);
 
-  renderToday(todayClass);
+renderToday(todayClass);
 }
   
 function changeArrival(id,time){
