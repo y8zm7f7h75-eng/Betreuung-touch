@@ -2667,8 +2667,9 @@ if(select){
     html+=`
       <div class="child"
            style="border-left-color:${childColor(child)}">
-        <strong>${child.name}</strong>
-        <div>${child.className}</div>
+           <strong>${escapeClassListText(child.name)}</strong>
+        
+        <div>${escapeClassListText(child.className)}</div>
       </div>
     `;
 
@@ -2765,7 +2766,7 @@ function renderProjectArchive(){
             return `
               <div style="margin-top:5px; padding:5px; border-bottom:1px solid #ddd">
                 <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${childColor(child)};margin-right:6px"></span>
-                ${child.name} – ${child.className}
+                ${escapeClassListText(child.name)} – ${escapeClassListText(child.className)}
                 <strong style="margin-left:6px">
                   ${hasPaid ? "Bezahlt" : (dismissed[child.id] && dismissed[child.id][project.id] ? "Entfällt" : "Noch offen")}
                 </strong>
