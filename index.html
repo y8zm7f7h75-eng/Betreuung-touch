@@ -1039,9 +1039,16 @@ function load(key, fallback){
   }
 }
 
+
 function save(key,value){
-  localStorage.setItem(key,JSON.stringify(value));
+  try{
+    localStorage.setItem(key,JSON.stringify(value));
+  }catch(e){
+    alert("Die Daten konnten nicht gespeichert werden. Bitte prüfe den verfügbaren Speicherplatz.");
+    console.error("Speicherfehler:",e);
+  }
 }
+
 function closeDay(date,reason){
 
   if(!date) return;
