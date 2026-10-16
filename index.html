@@ -1751,7 +1751,7 @@ const date=todayString();
 const a=attendance[date]?.[id] || {};
 const jetzt=currentTime();
 
-if(a.gehen && jetzt.localeCompare(a.gehen)>0){
+if(a.gehen && timeToMinutes(jetzt) > timeToMinutes(a.gehen)){
 alert("Die Ankommenszeit darf nicht nach der Gehzeit liegen.");
 return;
 }
