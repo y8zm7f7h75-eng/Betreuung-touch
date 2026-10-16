@@ -1774,10 +1774,10 @@ function changeArrival(id,time){
   ? attendance[date][id]
   : {};
 
-  if(
+    if(
   time !== "" &&
   a.gehen &&
-  time.localeCompare(a.gehen) > 0
+  timeToMinutes(time) > timeToMinutes(a.gehen)
 ){
   alert("Die Ankommenszeit darf nicht nach der Gehzeit liegen.");
   renderToday(todayClass);
