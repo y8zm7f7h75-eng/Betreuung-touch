@@ -1810,7 +1810,7 @@ function setDeparture(id){
 
   const jetzt=currentTime();
 
-  if(jetzt < a.ankommen){
+  if(timeToMinutes(jetzt) < timeToMinutes(a.ankommen)){
     alert("Die Gehzeit darf nicht vor der Ankommenszeit liegen.");
     return;
   }
