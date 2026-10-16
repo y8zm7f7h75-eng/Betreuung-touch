@@ -1839,7 +1839,7 @@ function changeDeparture(id,time){
     return;
   }
 
-  if(time && time < a.ankommen){
+  if(time && timeToMinutes(time) < timeToMinutes(a.ankommen)){
     alert("Die Gehzeit darf nicht vor der Ankommenszeit liegen.");
     renderToday(todayClass);
     return;
