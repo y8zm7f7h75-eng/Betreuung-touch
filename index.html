@@ -1376,10 +1376,8 @@ function showTodayClass(classNumber){
   onclick="setArrival('${c.id}')">
 
   ${a.ankommen
-
-    ? "Ankommen "+escapeClassListText(a.ankommen)
-
-    : "Ankommen"}
+  ? escapeClassListText(a.ankommen)
+  : "Ankommen"}
 
 </button>
 
@@ -1387,7 +1385,7 @@ function showTodayClass(classNumber){
 
   type="time"
 
-  value="${escapeClassListText(a.ankommen || "")}"
+  value=""
 
   onchange="changeArrival('${c.id}',this.value)"
 
@@ -1396,13 +1394,13 @@ function showTodayClass(classNumber){
               <button class="smallbtn"
                 onclick="setDeparture('${c.id}')">
                 ${a.gehen
-                 ? "Gehen "+escapeClassListText(a.gehen)
-                  : "Gehen"}
+  ? escapeClassListText(a.gehen)
+  : "Gehen"}
               </button>
 
               <input
                 type="time"
-                value="${escapeClassListText(a.gehen || "")}"
+               value="" 
                 onchange="changeDeparture('${c.id}',this.value)"
                 title="Gehzeit eintragen oder korrigieren">
 
@@ -1739,7 +1737,7 @@ const a=attendance[date]?.[id] || {};
 const jetzt=currentTime();
 
 if(a.gehen && jetzt.localeCompare(a.gehen)>0){
-alert(“Die Ankommenszeit darf nicht nach der Gehzeit liegen.”);
+alert("Die Ankommenszeit darf nicht nach der Gehzeit liegen.");
 return;
 }
 
