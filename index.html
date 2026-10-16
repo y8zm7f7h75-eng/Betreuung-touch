@@ -1728,6 +1728,16 @@ function addLateArrival(){
 
 }
 
+function timeToMinutes(value){
+  if(!value) return null;
+
+  const teile = String(value).slice(0,5).split(":");
+
+  if(teile.length !== 2) return null;
+
+  return Number(teile[0]) * 60 + Number(teile[1]);
+}
+
 function currentTime(){
   return new Date().toLocaleTimeString("de-DE",{
     hour:"2-digit",
