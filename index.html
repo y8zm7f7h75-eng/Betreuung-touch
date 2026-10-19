@@ -108,6 +108,54 @@ h2{
   }
 }
 
+.daily-plan-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  align-items: start;
+}
+
+.daily-plan-row > .section {
+  min-width: 0;
+  margin-bottom: 8px;
+}
+
+.daily-plan-row .controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+.daily-plan-row .controls select,
+.daily-plan-row .controls input {
+  min-width: 0;
+  padding: 3px;
+  font-size: 12px;
+}
+
+.daily-plan-row .controls select:first-child {
+  max-width: 65px;
+}
+
+.daily-plan-row .controls input[type="time"] {
+  width: 65px;
+}
+
+.daily-plan-row .controls input[type="text"] {
+  width: 65px;
+}
+
+.daily-plan-row .controls .smallbtn {
+  padding: 4px;
+  font-size: 11px;
+}
+
+@media (max-width: 600px) {
+  .daily-plan-row {
+    grid-template-columns: 1fr;
+  }
+}
+
 .datebar{
   display:flex;
   gap:8px;
@@ -3490,7 +3538,10 @@ function renderDailyPlan(){
 
   let html="";
 
-  classes.forEach(cls=>{
+  classes.forEach((cls,index)=>{
+  if(index % 2 === 0){
+    html += '<div class="daily-plan-row">';
+  }
 
     html+=`
       <div class="section">
@@ -3579,11 +3630,16 @@ children
         `;
       });
 
+    
     html+="</div>";
+
+    if(index % 2 === 1 || index === classes.length - 1){
+      html += '</div>';
+    }
   });
 
   document.getElementById("dailyPlanning").innerHTML=html;
-  }
+
 
   
 function changeDailyPlan(date,id,time,type,info){
