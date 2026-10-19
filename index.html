@@ -1388,7 +1388,9 @@ function showTodayClass(classNumber){
 
 <input
 
-  type="time"
+                id="departureInput-${c.id}"
+
+                type="time"
 
   value=""
 
@@ -1396,7 +1398,7 @@ function showTodayClass(classNumber){
 
   title="Ankunftszeit manuell eintragen oder korrigieren">
 
-              <button class="smallbtn"
+        <button id="departureButton-${c.id}" class="smallbtn"      
                 onclick="setDeparture('${c.id}')">
                 ${a.gehen
   ? escapeClassListText(a.gehen)
