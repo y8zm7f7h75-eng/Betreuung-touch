@@ -3607,7 +3607,7 @@ children
 
 </select>
 
- <input
+  <input
 
   type="text"
 
@@ -3615,9 +3615,21 @@ children
 
   placeholder="Info"
 
-  onchange="changeDailyPlan('${date}','${c.id}',null,null,this.value)"
+  oninput="changeDailyPlan('${date}','${c.id}',null,null,this.value)"
 
   title="Zusätzliche Information">
+
+ <button
+
+  type="button"
+
+  class="smallbtn"
+
+  onclick="confirmDailyInfo('${date}','${c.id}',this.previousElementSibling)">
+
+  ✓
+
+ </button>
               
 
               ${
@@ -3729,7 +3741,10 @@ function changeDailyPlan(date,id,time,type,info){
   }
 }
 
-
+function confirmDailyInfo(date,id,input){
+  changeDailyPlan(date,id,null,null,input.value);
+  input.blur();
+}
 
 function useRegular(date,id){
 
