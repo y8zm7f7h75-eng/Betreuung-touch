@@ -1815,9 +1815,7 @@ function changeArrival(id,time){
   const button = document.getElementById("arrivalButton-" + id);
   if(button) button.textContent = time || "Ankommen";
 
-  const input = document.querySelector(
-    `input[onchange="changeArrival('${id}',this.value)"]`
-  );
+    const input = document.getElementById("departureInput-" + id);
   if(input) input.value = "";
 }
 
