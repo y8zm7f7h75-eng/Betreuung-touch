@@ -3730,7 +3730,7 @@ function changeDailyPlan(date,id,time,type,info){
     label.textContent = "Ausnahme für diesen Tag";
   }
 
-  let regularButton = card.querySelector(".smallbtn");
+ let regularButton = [...card.querySelectorAll(".smallbtn")].find(button => button.textContent.trim() === "Regelmäßig verwenden");
 
   if(!regularButton){
     regularButton = document.createElement("button");
