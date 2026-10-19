@@ -267,9 +267,23 @@ button{
 
 .controls{
   display:flex;
-  gap:7px;
-  flex-wrap:wrap;
+  gap:3px;
+  flex-wrap:nowrap;
   align-items:center;
+}
+
+.controls .time-button{
+  min-width:0;
+  padding-left:5px;
+  padding-right:5px;
+  font-size:14px;
+}
+
+.controls input[type="time"] {
+  width:55px;
+  min-width:0;
+  padding:3px 1px;
+  font-size:12px;
 }
 
 select{
