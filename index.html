@@ -3575,7 +3575,12 @@ children
             <div class="controls">
 <select
   onchange="changeDailyPlan('${date}','${c.id}',this.value,null)">
-  ${options(times,plan.time)}
+  ${options(
+  plan.time && !times.includes(plan.time)
+    ? [...times, plan.time]
+    : times,
+  plan.time
+)}
 </select>
 
 
