@@ -1385,6 +1385,8 @@ function showTodayClass(classNumber){
 
 <button id="arrivalButton-${c.id}" class="smallbtn"
 
+  style="background:${childColor(c)}"
+
   onclick="setArrival('${c.id}')">
 
   ${a.ankommen
@@ -1405,7 +1407,9 @@ function showTodayClass(classNumber){
 
   title="Ankunftszeit manuell eintragen oder korrigieren">
 
-        <button id="departureButton-${c.id}" class="smallbtn"      
+         <button id="departureButton-${c.id}" class="smallbtn"
+
+  style="background:${childColor(c)}"
                 onclick="setDeparture('${c.id}')">
                 ${a.gehen
   ? escapeClassListText(a.gehen)
