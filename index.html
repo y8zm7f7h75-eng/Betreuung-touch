@@ -120,6 +120,13 @@ button{
   background:#dce5e9;
   font-size:15px;
 }
+  .time-button {
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 17px;
+  text-shadow: 0 1px 1px #333333;
+  min-width: 85px;
+}
 .today-class-buttons{
   display:flex;
   gap:8px;
@@ -1383,7 +1390,7 @@ function showTodayClass(classNumber){
 
               
 
-<button id="arrivalButton-${c.id}" class="smallbtn"
+<button id="arrivalButton-${c.id}" class="smallbtn time-button"
 
   style="background:${childColor(c)}"
 
@@ -1407,7 +1414,7 @@ function showTodayClass(classNumber){
 
   title="Ankunftszeit manuell eintragen oder korrigieren">
 
-         <button id="departureButton-${c.id}" class="smallbtn"
+      <button id="departureButton-${c.id}" class="smallbtn time-button"   
 
   style="background:${childColor(c)}"
                 onclick="setDeparture('${c.id}')">
