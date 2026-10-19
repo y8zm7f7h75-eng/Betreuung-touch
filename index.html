@@ -3643,6 +3643,7 @@ children
 
 
   
+
 function changeDailyPlan(date,id,time,type,info){
 
   const old = getPlan(id,date);
@@ -3660,7 +3661,10 @@ function changeDailyPlan(date,id,time,type,info){
   dailyPlans[date][id] = updated;
 
   save("dailyPlans",dailyPlans);
+
+  renderDailyPlan();
 }
+
 
 function useRegular(date,id){
 
