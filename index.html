@@ -1861,7 +1861,13 @@ function changeDeparture(id,time){
 
   save("attendance",attendance);
 
-  renderToday(todayClass);
+  const button = document.getElementById("departureButton-" + id);
+if(button) button.textContent = time || "Gehen";
+
+const input = document.querySelector(
+  `input[onchange="changeDeparture('${id}',this.value)"]`
+);
+if(input) input.value = "";
 }
 
 /* -------------------------
