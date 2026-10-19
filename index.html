@@ -3557,7 +3557,7 @@ children
         const plan=getPlan(c.id,date);
 
         html+=`
-          <div class="child
+          <div id="daily-plan-${c.id}" class="child
             ${plan.time ? "planned":""}
             ${plan.exception ? "exception":""}"
             style="border-left-color:${childColor(c)}">
@@ -3660,8 +3660,23 @@ function changeDailyPlan(date,id,time,type,info){
 
   dailyPlans[date][id] = updated;
 
-  save("dailyPlans",dailyPlans);
+    save("dailyPlans",dailyPlans);
 
+  
+  const card = document.getElementById("daily-plan-" + id);
+
+  if(time !== null && card){
+    const select = card.querySelector("select");
+    const manual = card.querySelector('input[type="time"]');
+
+    if(select){
+      select.value = time;
+    }
+
+    if(manual){
+      manual.value = "";
+    }
+  }
 }
 
 
