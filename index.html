@@ -1374,7 +1374,9 @@ function showTodayClass(classNumber){
       "Klasse 4"
     ];
   }
-
+  if(classNumber===1 || classNumber===2){
+    html += '<div class="today-paired">';
+  }
   selectedClasses.forEach(className=>{
 
     html+=`
@@ -1452,7 +1454,9 @@ function showTodayClass(classNumber){
     `;
 
   });
-
+  if(classNumber===1 || classNumber===2){
+    html += '</div>';
+  }
   document.getElementById("todayList").innerHTML=html;
 renderArrivalOverview();
 }
