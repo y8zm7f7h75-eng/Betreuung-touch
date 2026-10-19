@@ -1800,7 +1800,8 @@ function changeArrival(id,time){
   timeToMinutes(time) > timeToMinutes(a.gehen)
 ){
   alert("Die Ankommenszeit darf nicht nach der Gehzeit liegen.");
-  
+    const input = document.getElementById("departureInput-" + id);
+  if(input) input.value = "";
   return;
 }
 
