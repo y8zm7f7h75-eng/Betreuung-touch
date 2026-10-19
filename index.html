@@ -3644,6 +3644,7 @@ children
 
   
 
+
 function changeDailyPlan(date,id,time,type,info){
 
   const old = getPlan(id,date);
@@ -3659,25 +3660,68 @@ function changeDailyPlan(date,id,time,type,info){
   }
 
   dailyPlans[date][id] = updated;
+  save("dailyPlans",dailyPlans);
 
-    save("dailyPlans",dailyPlans);
-
-  
   const card = document.getElementById("daily-plan-" + id);
 
-  if(time !== null && card){
-    const select = card.querySelector("select");
-    const manual = card.querySelector('input[type="time"]');
+  if(!card) return;
 
-    if(select){
-      select.value = time;
+  const selects = card.querySelectorAll("select");
+  const manual = card.querySelector('input[type="time"]');
+
+  if(time !== null && selects[0]){
+    let found = false;
+
+    for(const option of selects[0].options){
+      if(option.value === time){
+        found = true;
+        break;
+      }
     }
+
+    if(!found){
+      const option = document.createElement("option");
+      option.value = time;
+      option.textContent = time;
+      selects[0].appendChild(option);
+    }
+
+    selects[0].value = time;
 
     if(manual){
       manual.value = "";
     }
   }
+
+  if(type !== null && selects[1]){
+    selects[1].value = type;
+  }
+
+  card.classList.add("exception");
+
+  if(updated.time){
+    card.classList.add("planned");
+  } else {
+    card.classList.remove("planned");
+  }
+
+  const label = card.querySelector(".classname");
+
+  if(label){
+    label.textContent = "Ausnahme für diesen Tag";
+  }
+
+  let regularButton = card.querySelector(".smallbtn");
+
+  if(!regularButton){
+    regularButton = document.createElement("button");
+    regularButton.className = "smallbtn";
+    regularButton.textContent = "Regelmäßig verwenden";
+    regularButton.onclick = () => useRegular(date,id);
+    card.querySelector(".controls").appendChild(regularButton);
+  }
 }
+
 
 
 function useRegular(date,id){
