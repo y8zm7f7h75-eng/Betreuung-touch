@@ -3118,52 +3118,81 @@ function renderFruitMoney(){
 
   const paid=payments[year] || {};
 
-  let openHtml="";
-  let paidHtml="";
+  const classGroups=[
+    {title:"Klasse 1", matches:c=>c.className.startsWith("Klasse 1")},
+    {title:"Klasse 2", matches:c=>c.className.startsWith("Klasse 2")},
+    {title:"Klasse 3", matches:c=>c.className==="Klasse 3"},
+    {title:"Klasse 4", matches:c=>c.className==="Klasse 4"}
+  ];
+
   let openCount=0;
   let paidCount=0;
 
-  children.filter(child=>!inactiveChildren[child.id]).forEach(child=>{
+  function makeColumns(isPaid){
 
-    const isPaid=!!paid[child.id];
+    return '<div class="fruit-class-grid">' +
+      classGroups.map(group=>{
 
-    const row=`
-      <div class="child"
-           style="border-left-color:${childColor(child)}">
+        const groupChildren=children.filter(child=>
+          !inactiveChildren[child.id] &&
+          group.matches(child) &&
+          (!!paid[child.id])===isPaid
+        );
 
-        <strong>${escapeClassListText(child.name)}</strong>
-        <div class="classname">${escapeClassListText(child.className)}</div>
-        <div>${amount.toFixed(2).replace(".",",")} €</div>
+        let rows="";
 
-        <label>
-          <input type="checkbox"
-            ${isPaid ? "checked" : ""}
-            onchange="toggleFruitPaid('${child.id}')">
-          Bezahlt
-        </label>
+        groupChildren.forEach(child=>{
 
-      </div>
-    `;
+          rows+=`
+            <div class="child"
+                 style="border-left-color:${childColor(child)}">
 
-    if(isPaid){
-      paidHtml+=row;
-      paidCount++;
-    }else{
-      openHtml+=row;
-      openCount++;
-    }
+              <strong>${escapeClassListText(child.name)}</strong>
+              <div class="classname">${escapeClassListText(child.className)}</div>
+              <div>${amount.toFixed(2).replace(".",",")} €</div>
 
-  });
+              <label>
+                <input type="checkbox"
+                  ${isPaid ? "checked" : ""}
+                  onchange="toggleFruitPaid('${child.id}')">
+                Bezahlt
+              </label>
+
+            </div>
+          `;
+
+          if(isPaid){
+            paidCount++;
+          }else{
+            openCount++;
+          }
+        });
+
+        return `
+          <div class="fruit-class-column">
+            <h4>${group.title}</h4>
+            ${rows || "<p>Keine Kinder</p>"}
+          </div>
+        `;
+
+      }).join("") +
+    '</div>';
+  }
+
+  const openHtml=makeColumns(false);
+  const paidHtml=makeColumns(true);
 
   document.getElementById("fruitOpenList").innerHTML=
     `<p><strong>${openCount} offene Zahlungen</strong></p>`+
-    (openHtml || "<p>Alle Kinder haben bezahlt.</p>");
+    (openCount ? openHtml : "<p>Alle Kinder haben bezahlt.</p>");
 
   document.getElementById("fruitPaidList").innerHTML=
     `<p><strong>${paidCount} bezahlte Beiträge</strong></p>`+
-    (paidHtml || "<p>Noch keine Zahlungen erfasst.</p>");
+    (paidCount ? paidHtml : "<p>Noch keine Zahlungen erfasst.</p>");
 
 }
+
+
 
 /* -------------------------
    KLASSENLISTEN
